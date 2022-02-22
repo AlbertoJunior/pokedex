@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@+id/navigation_list_all">
+
+    <fragment
+        android:id="@+id/navigation_list_all"
+        android:name="com.example.pokedex.view.pokedex.ListAllFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/fragment_list_all" >
+        <action
+            android:id="@+id/action_navigation_list_all_to_navigation_pokemon_details"
+            app:destination="@id/navigation_pokemon_details" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_my_pokemons"
+        android:name="com.example.pokedex.view.pokedex.ListMyPokedexFragment"
+        android:label="@string/title_my_pokedex"
+        tools:layout="@layout/fragment_list_my_pokedex" >
+        <action
+            android:id="@+id/action_navigation_my_pokemons_to_navigation_pokemon_details"
+            app:destination="@id/navigation_pokemon_details" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_pokemon_details"
+        android:name="com.example.pokedex.view.pokedex.PokemonDetailsFragment"
+        android:label="@string/title_pokemon_details"
+        tools:layout="@layout/fragment_pokemon_details">
+        <argument
+            android:name="pokemon_id"
+            android:defaultValue="0L"
+            app:argType="long" />
+    </fragment>
+</navigation>
