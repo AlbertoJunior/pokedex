@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.pokedex.data.local.model.Pokemon
+import com.example.pokedex.data.local.model.PokemonArea
 import com.example.pokedex.data.local.model.PokemonSpecie
 
 @Dao
@@ -38,17 +39,9 @@ interface PokemonDAO {
     @Query("UPDATE Pokemon SET favorite = :isFavorite WHERE id = :pokemonId")
     suspend fun favoritePokemon(pokemonId: Long, isFavorite: Boolean)
 
-    @Query("UPDATE Pokemon SET " +
-            "baseHappiness = :pokemonSpecie-baseHappiness, " +
-            "captureRate = :pokemonSpecie-captureRate, " +
-            "color = :pokemonSpecie-color, " +
-            "flavorTextEntries = :pokemonSpecie-flavorTextEntries, " +
-            "growthRate = :pokemonSpecie-growthRate, " +
-            "habitat = :pokemonSpecie-habitat, " +
-            "isBaby = :pokemonSpecie-isBaby, " +
-            "isLegendary = :pokemonSpecie-isLegendary, " +
-            "isMythical = :pokemonSpecie-isMythical, " +
-            "shape = :pokemonSpecie-shape " +
-            "WHERE id = :pokemonId")
+    @Query("UPDATE Pokemon SET pokemonSpecie = :pokemonSpecie WHERE id = :pokemonId")
     suspend fun updatePokemonSpecie(pokemonId: Long, pokemonSpecie: PokemonSpecie)
+
+    @Query("UPDATE Pokemon SET pokemonArea = :pokemonArea WHERE id = :pokemonId")
+    suspend fun updatePokemonArea(pokemonId: Long, pokemonArea: List<PokemonArea>)
 }

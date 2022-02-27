@@ -1,5 +1,7 @@
 package com.example.pokedex.data.local.model
 
+import com.example.pokedex.core.capitalize
+
 data class PokemonSpecie(
     val baseHappiness: Long? = null,
     val captureRate: Long? = null,
@@ -11,4 +13,6 @@ data class PokemonSpecie(
     val isLegendary: Boolean? = null,
     val isMythical: Boolean? = null,
     val shape: String? = null
-)
+) {
+    fun getHabitatShow() = habitat?.replace("-", " ")?.capitalize() ?: ""
+}

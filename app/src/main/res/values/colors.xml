@@ -16,9 +16,11 @@
 
     <color name="black">#FF000000</color>
     <color name="black_700">#1E1E1E</color>
+    <color name="black_a10">#1A000000</color>
     <color name="black_a20">#33000000</color>
     <color name="black_a30">#4D000000</color>
 
+    <color name="transparent">#00FFFFFF</color>
     <color name="white">#FFFFFFFF</color>
     <color name="white_700">#E6E6E6</color>
 

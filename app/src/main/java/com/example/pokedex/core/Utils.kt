@@ -46,8 +46,6 @@ class Utils {
                     }
 
                 })
-                .fitCenter()
-                .circleCrop()
                 .apply {
                     placeHolder?.let { placeholder(it).into(into) } ?: into(into)
                 }

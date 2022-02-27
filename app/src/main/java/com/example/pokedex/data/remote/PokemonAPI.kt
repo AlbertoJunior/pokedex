@@ -1,5 +1,6 @@
 package com.example.pokedex.data.remote
 
+import com.example.pokedex.data.remote.model.LocationAreaEncounterElement
 import com.example.pokedex.data.remote.model.PokemonDetailedResponse
 import com.example.pokedex.data.remote.model.PokemonListResponse
 import com.example.pokedex.data.remote.model.PokemonSpecieResponse
@@ -13,7 +14,10 @@ interface PokemonAPI {
     }
 
     @GET("pokemon")
-    suspend fun fetchPokemonList(@Query("offset") offset: Int, @Query("limit") quantity: Int): PokemonListResponse
+    suspend fun fetchPokemonList(
+        @Query("offset") offset: Int,
+        @Query("limit") quantity: Int
+    ): PokemonListResponse
 
     @GET("pokemon/{id}")
     suspend fun fetchPokemonById(@Path("id") id: Long): PokemonDetailedResponse
@@ -21,6 +25,6 @@ interface PokemonAPI {
     @GET("pokemon-species/{id}")
     suspend fun fetchSpeciePokemonById(@Path("id") id: Long): PokemonSpecieResponse
 
-    @GET("pokemon/{name}")
-    suspend fun fetchPokemonByName(@Path("name") name: String): PokemonDetailedResponse
+    @GET("pokemon/{id}/encounters")
+    suspend fun fetchEncounterAreaPokemonById(@Path("id") id: Long): Array<LocationAreaEncounterElement>
 }

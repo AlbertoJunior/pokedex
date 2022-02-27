@@ -2,15 +2,14 @@ package com.example.pokedex.data
 
 import android.util.Log
 import androidx.lifecycle.liveData
+import com.example.pokedex.core.capitalize
 import com.example.pokedex.data.local.model.Pokemon
+import com.example.pokedex.data.local.model.PokemonArea
 import com.example.pokedex.data.local.model.PokemonSpecie
 import com.example.pokedex.data.local.model.Stat
 import com.example.pokedex.data.local.room.PokemonDAO
 import com.example.pokedex.data.remote.PokemonAPI
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import java.sql.SQLException
 import javax.inject.Inject
 
@@ -28,7 +27,7 @@ class PokemonRepository @Inject constructor(
         emitSource(pokemonDAO.getAllFavoritePokemon())
     }
 
-    suspend fun fetchListOnline(offset: Int, quantity: Int) {
+    private suspend fun fetchListOnline(offset: Int, quantity: Int) {
         try {
             val hasPokemon = pokemonDAO.hasPokemon(offset)
             if (!hasPokemon) {
@@ -68,22 +67,17 @@ class PokemonRepository @Inject constructor(
     fun fetchPokemonLocal(pokemonId: Long, allDetails: Boolean = false) = liveData {
         emitSource(pokemonDAO.fetchPokemonById(pokemonId))
         withContext(Dispatchers.IO) {
-            val listAsync = listOf(
-                async {
-                    fetchPokemonOnline(pokemonId)?.let {
-                        pokemonDAO.insertPokemon(it)
-                    }
-                },
-                async {
-                    if (allDetails) {
-                        fetchPokemonOnlineAllDetails(pokemonId)
-                    }
-                })
-            listAsync.awaitAll()
+            mutableListOf<Deferred<Any?>>().apply {
+                add(async { fetchPokemonOnline(pokemonId)?.let { pokemonDAO.insertPokemon(it) } })
+                if (allDetails) {
+                    add(async { fetchPokemonOnlineAllDetails(pokemonId) })
+                    add(async { fetchPokemonOnlineEncounterArea(pokemonId) })
+                }
+            }.awaitAll()
         }
     }
 
-    private suspend fun fetchPokemonOnline(pokemonId: Long, insert: Boolean = false): Pokemon? {
+    private suspend fun fetchPokemonOnline(pokemonId: Long): Pokemon? {
         return try {
             val directPokemon = pokemonDAO.fetchDirectPokemonById(pokemonId)
             return if (!directPokemon.isComplete()) {
@@ -103,31 +97,37 @@ class PokemonRepository @Inject constructor(
                     }
                 }
 
+                val stats = fetchPokemonById.stats.mapNotNull {
+                    return@mapNotNull if (it.stat?.name != null) {
+                        Stat(it.stat.name, it.baseStat ?: 0L, it.effort ?: 0L)
+                    } else {
+                        null
+                    }
+                }
+
+                val types = fetchPokemonById.types.mapNotNull { it.type?.name }.distinct()
+
+                val moves = fetchPokemonById.moves
+                    .mapNotNull {
+                        it.move?.name?.replace("-", " ")?.capitalize()
+                    }
+                    .distinct()
+
                 val pokemon = Pokemon(
                     pokemonId,
                     directPokemon.name,
                     directPokemon.offset,
                     fetchPokemonById.abilities,
-                    fetchPokemonById.moves,
+                    moves,
                     fetchPokemonById.height,
                     fetchPokemonById.locationAreaEncounters,
                     fetchPokemonById.baseExperience,
                     fetchPokemonById.species,
-                    fetchPokemonById.stats.mapNotNull {
-                        return@mapNotNull if (it.stat?.name != null) {
-                            Stat(it.stat.name, it.baseStat ?: 0L, it.effort ?: 0L)
-                        } else {
-                            null
-                        }
-                    },
+                    stats,
                     listSprites,
-                    fetchPokemonById.types,
+                    types,
                     fetchPokemonById.weight
                 )
-
-                if (insert)
-                    pokemonDAO.insertPokemon(pokemon)
-
                 pokemon
             } else {
                 null
@@ -141,14 +141,14 @@ class PokemonRepository @Inject constructor(
     private suspend fun fetchPokemonOnlineAllDetails(pokemonId: Long) {
         try {
             val directPokemon = pokemonDAO.fetchDirectPokemonById(pokemonId)
-            if (directPokemon.pokemonSpecie == null) {
+            if (directPokemon.pokemonSpecie == null && directPokemon.species?.url?.isNotEmpty() == true) {
                 val fetchSpeciePokemonById = pokemonAPI.fetchSpeciePokemonById(pokemonId)
 
                 val flavorTextEntries = fetchSpeciePokemonById.flavorTextEntries
                     ?.filter { it.language?.name == "en" }
-                    ?.distinctBy { it.flavorText }
                     ?.mapNotNull { it.flavorText }
-                    ?.map { it.replace("\n", " ").replace("\\f", " ") }
+                    ?.map { it.replace("[\n\\f]+".toRegex(), " ") }
+                    ?.distinctBy { it }
 
                 val pokemonSpecie = PokemonSpecie(
                     fetchSpeciePokemonById.baseHappiness,
@@ -162,11 +162,37 @@ class PokemonRepository @Inject constructor(
                     fetchSpeciePokemonById.isMythical,
                     fetchSpeciePokemonById.shape?.name
                 )
-                directPokemon.pokemonSpecie = pokemonSpecie
-                pokemonDAO.insertPokemon(directPokemon)
+                pokemonDAO.updatePokemonSpecie(pokemonId, pokemonSpecie)
             }
         } catch (e: SQLException) {
             Log.e("PokemonRepository", e.message ?: "fetchPokemonOnlineAllDetails")
+        }
+    }
+
+    private suspend fun fetchPokemonOnlineEncounterArea(pokemonId: Long) {
+        try {
+            val directPokemon = pokemonDAO.fetchDirectPokemonById(pokemonId)
+            if (directPokemon.locationAreaEncounters != null && directPokemon.pokemonArea.isEmpty()) {
+                val encounterAreaPokemon = pokemonAPI.fetchEncounterAreaPokemonById(pokemonId)
+
+                val areas = encounterAreaPokemon.mapNotNull {
+                    it.locationArea?.name?.let { nameArea ->
+                        it.versionDetails
+                            ?.firstOrNull()?.encounterDetails?.firstOrNull()
+                            ?.let { encounterDetail ->
+                                PokemonArea(
+                                    nameArea,
+                                    encounterDetail.chance,
+                                    encounterDetail.minLevel,
+                                    encounterDetail.maxLevel
+                                )
+                            }
+                    }
+                }
+                pokemonDAO.updatePokemonArea(pokemonId, areas)
+            }
+        } catch (e: SQLException) {
+            Log.e("PokemonRepository", e.message ?: "fetchPokemonOnlineEncounterArea")
         }
     }
 

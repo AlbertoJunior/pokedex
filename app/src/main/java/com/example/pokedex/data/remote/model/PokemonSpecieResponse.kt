@@ -2,7 +2,7 @@ package com.example.pokedex.data.remote.model
 
 import com.google.gson.annotations.SerializedName
 
-data class PokemonSpecieResponse (
+data class PokemonSpecieResponse(
     @SerializedName(value = "baseHappiness", alternate = ["base_happiness"])
     val baseHappiness: Long? = null,
     @SerializedName(value = "captureRate", alternate = ["capture_rate"])
@@ -26,11 +26,11 @@ data class PokemonSpecieResponse (
     val shape: SimplyObject? = null
 )
 
-data class EvolutionChain (
+data class EvolutionChain(
     val url: String? = null
 )
 
-data class FlavorTextEntry (
+data class FlavorTextEntry(
     @SerializedName(value = "flavorText", alternate = ["flavor_text"])
     val flavorText: String? = null,
     val language: SimplyObject? = null,

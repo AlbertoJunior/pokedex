@@ -8,16 +8,19 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import com.example.pokedex.R
 import com.example.pokedex.core.EventSource
 import com.example.pokedex.data.local.model.Pokemon
 import com.example.pokedex.databinding.FragmentListAllBinding
+import com.example.pokedex.view.loading.LottieFragment
 import com.example.pokedex.view.pokedex.adapter.PokemonAdapter
 import com.example.pokedex.view.pokedex.listeners.PokemonAdapterListener
 import com.example.pokedex.view.pokedex.viewmodel.PokemonViewModel
+import com.example.pokedex.view.pokemon.PokemonDetailFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class ListAllFragment : Fragment() {
+class PokedexFragment : Fragment() {
     private val viewModel by activityViewModels<PokemonViewModel>()
 
     private lateinit var binding: FragmentListAllBinding
@@ -33,17 +36,23 @@ class ListAllFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        replaceFragment(LottieFragment.newInstance())
         setupAdapter()
     }
 
     private fun setupAdapter() {
         val pokemonAdapter = PokemonAdapter().apply {
             listener = object : PokemonAdapterListener {
+                var lastPokemonId = 0L
                 override fun onPokemonClicked(pokemon: Pokemon) {
-                    navController.navigate(
-                        ListAllFragmentDirections
-                            .actionNavigationListAllToNavigationPokemonDetails(pokemon.id)
-                    )
+                    val showingLottie =
+                        requireActivity().supportFragmentManager.fragments.find { it is LottieFragment } != null
+
+                    if (showingLottie || pokemon.id != lastPokemonId) {
+                        lastPokemonId = pokemon.id
+                        replaceFragment(PokemonDetailFragment.newInstance(pokemon.id))
+                    } else
+                        replaceFragment(LottieFragment.newInstance())
                 }
             }
         }
@@ -60,7 +69,7 @@ class ListAllFragment : Fragment() {
                 is EventSource.Loading -> {
                     binding.nsPokemonList.visibility = View.GONE
                     binding.llLoading.visibility = View.VISIBLE
-                    binding.tvMessageLoading.text = it.message
+                    binding.tvFloatingMessage.text = it.message
                 }
                 is EventSource.Ready -> {
                     binding.nsPokemonList.visibility = View.VISIBLE
@@ -75,5 +84,13 @@ class ListAllFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun replaceFragment(fragment: Fragment) {
+        requireActivity().supportFragmentManager
+            .beginTransaction()
+            .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
+            .replace(R.id.fragment_container, fragment)
+            .commit()
     }
 }

@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.pokedex.R
 import com.example.pokedex.core.Utils
 import com.example.pokedex.core.capitalize
+import com.example.pokedex.core.colorByText
 import com.example.pokedex.data.local.model.Pokemon
 import com.example.pokedex.databinding.ItemPokemonBinding
 import com.example.pokedex.view.pokedex.listeners.PokemonAdapterListener
@@ -40,6 +41,10 @@ class PokemonAdapter : ListAdapter<Pokemon, PokemonAdapter.ViewHolder>(DiffCallb
             binding.progress.visibility = View.VISIBLE
             binding.tvName.text = pokemon.name.capitalize()
             binding.root.setOnClickListener { listener.onPokemonClicked(pokemon) }
+
+            binding.ivImageFavorite.visibility = if (pokemon.favorite) View.VISIBLE else View.GONE
+            binding.ivImageFavorite.colorByText(pokemon.pokemonSpecie?.color)
+
             loadImage(pokemon)
         }
 

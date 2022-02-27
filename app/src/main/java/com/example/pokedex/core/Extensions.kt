@@ -2,14 +2,20 @@ package com.example.pokedex.core
 
 import android.content.res.ColorStateList
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.example.pokedex.R
 
 fun String.capitalize(): String {
-    val camelRegex = "[a-z]|( [a-z])".toRegex()
-    return this.replaceFirst(camelRegex, this.first().uppercase())
+    return this.split(" ")
+        .joinToString(" ") { it.replaceFirst("[a-z]".toRegex(), it.first().uppercase()) }
+}
+
+@BindingAdapter("visibilityByBoolean")
+fun View.visibilityByBoolean(value: Boolean) {
+    this.visibility = if (value) View.VISIBLE else View.GONE
 }
 
 @BindingAdapter("colorByText")
@@ -23,7 +29,12 @@ fun View.colorByText(value: String?) {
         "white" -> R.color.white_700
         else -> R.color.blue_700
     }
-    background.setTint(ContextCompat.getColor(context, color))
+
+    if (this is ImageView) {
+        imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, color))
+    } else {
+        background.setTint(ContextCompat.getColor(context, color))
+    }
 }
 
 @BindingAdapter("textColorByText")

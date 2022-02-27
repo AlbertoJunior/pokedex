@@ -34,5 +34,7 @@ class MainActivity : AppCompatActivity() {
         viewModel.bottomNavigationStatus.observe(this) {
             binding.navView.visibility = it
         }
+
+        viewModel
     }
 }

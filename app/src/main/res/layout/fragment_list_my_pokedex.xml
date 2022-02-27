@@ -7,18 +7,15 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".view.pokedex.ListMyPokedexFragment">
+        tools:context=".view.pokedex.MyPokedexFragment">
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tv_message"
+            style="@style/PokedexTextTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:fontFamily="sans-serif-smallcaps"
-            android:text="My Pokemons!"
-            android:textColor="?colorPrimaryDark"
-            android:textSize="20sp"
-            android:textStyle="bold"
+            android:text="@string/my_pokemons"
+            app:layout_constraintBottom_toTopOf="@id/ns_pokemon_list"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -28,7 +25,6 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="8dp"
-            android:background="@color/green_a20"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -37,13 +33,12 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_pokemon_list"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:itemCount="8"
+                tools:itemCount="4"
                 tools:listitem="@layout/item_pokemon_pokedex" />
         </androidx.core.widget.NestedScrollView>
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

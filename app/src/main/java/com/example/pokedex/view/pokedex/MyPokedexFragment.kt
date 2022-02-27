@@ -17,7 +17,7 @@ import com.example.pokedex.view.pokedex.viewmodel.PokemonViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class ListMyPokedexFragment : Fragment() {
+class MyPokedexFragment : Fragment() {
     private lateinit var navController: NavController
     private lateinit var binding: FragmentListMyPokedexBinding
     private val viewModel by activityViewModels<PokemonViewModel>()
@@ -42,8 +42,9 @@ class ListMyPokedexFragment : Fragment() {
             listener = object : PokemonAdapterListener {
                 override fun onPokemonClicked(pokemon: Pokemon) {
                     navController.navigate(
-                        ListMyPokedexFragmentDirections
-                            .actionNavigationMyPokemonsToNavigationPokemonDetails(pokemon.id)
+                        MyPokedexFragmentDirections.actionNavigationMyPokemonsToNavigationPokemonDetails(
+                            pokemon.id
+                        )
                     )
                 }
             }
@@ -55,17 +56,13 @@ class ListMyPokedexFragment : Fragment() {
             when (it) {
                 is EventSource.Error -> {
                     binding.nsPokemonList.visibility = View.GONE
-//                    binding.llLoading.visibility = View.GONE
                     binding.tvMessage.text = it.message
                 }
                 is EventSource.Loading -> {
                     binding.nsPokemonList.visibility = View.GONE
-//                    binding.llLoading.visibility = View.VISIBLE
-//                    binding.tvMessageLoading.text = it.message
                 }
                 is EventSource.Ready -> {
                     binding.nsPokemonList.visibility = View.VISIBLE
-//                    binding.llLoading.visibility = View.GONE
 
                     if (it.message?.isNotEmpty() == true) {
                         binding.tvMessage.visibility = View.VISIBLE
@@ -74,15 +71,6 @@ class ListMyPokedexFragment : Fragment() {
 
                     pokemonAdapter.submitList(it.value)
                 }
-            }
-        }
-
-        object : PokemonAdapterListener {
-            override fun onPokemonClicked(pokemon: Pokemon) {
-                navController.navigate(
-                    ListAllFragmentDirections
-                        .actionNavigationListAllToNavigationPokemonDetails(pokemon.id)
-                )
             }
         }
     }

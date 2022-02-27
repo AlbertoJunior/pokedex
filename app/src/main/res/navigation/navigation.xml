@@ -7,32 +7,50 @@
 
     <fragment
         android:id="@+id/navigation_list_all"
-        android:name="com.example.pokedex.view.pokedex.ListAllFragment"
+        android:name="com.example.pokedex.view.pokedex.PokedexFragment"
         android:label="@string/title_grass"
-        tools:layout="@layout/fragment_list_all" >
+        tools:layout="@layout/fragment_list_all">
         <action
             android:id="@+id/action_navigation_list_all_to_navigation_pokemon_details"
-            app:destination="@id/navigation_pokemon_details" />
+            app:destination="@id/navigation_pokemon_details"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
     </fragment>
 
     <fragment
         android:id="@+id/navigation_my_pokemons"
-        android:name="com.example.pokedex.view.pokedex.ListMyPokedexFragment"
+        android:name="com.example.pokedex.view.pokedex.MyPokedexFragment"
         android:label="@string/title_my_pokedex"
-        tools:layout="@layout/fragment_list_my_pokedex" >
+        tools:layout="@layout/fragment_list_my_pokedex">
         <action
             android:id="@+id/action_navigation_my_pokemons_to_navigation_pokemon_details"
-            app:destination="@id/navigation_pokemon_details" />
+            app:destination="@id/navigation_pokemon_details"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
     </fragment>
 
     <fragment
         android:id="@+id/navigation_pokemon_details"
-        android:name="com.example.pokedex.view.pokedex.PokemonDetailsFragment"
+        android:name="com.example.pokedex.view.pokemon.PokemonDetailFragment"
         android:label="@string/title_pokemon_details"
         tools:layout="@layout/fragment_pokemon_details">
         <argument
             android:name="pokemon_id"
             android:defaultValue="0L"
             app:argType="long" />
+
+        <argument
+            android:name="hide_nav"
+            android:defaultValue="false"
+            app:argType="boolean" />
+
+        <argument
+            android:name="hide_buttons"
+            android:defaultValue="false"
+            app:argType="boolean" />
     </fragment>
 </navigation>
