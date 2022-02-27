@@ -1,4 +1,4 @@
-# pokedex
+# Pokedex
 Creating a Pokedex App to study.
 
 API Rest:
@@ -9,3 +9,4 @@ Used libraries:
 * [Room](https://developer.android.com/jetpack/androidx/releases/room)
 * [Retrofit](https://square.github.io/retrofit/)
 * [OkHttp](https://square.github.io/okhttp/)
+* [Glide](https://bumptech.github.io/glide/)

@@ -1,7 +1,20 @@
 <resources>
     <string name="app_name">Pokedex</string>
-    <string name="title_home">Home</string>
+    <string name="title_grass">Grass</string>
     <string name="title_my_pokedex">My Pokemons</string>
     <string name="title_pokemon_details">Pokemon Details</string>
     <string name="enter_in_grass">Enter in grass</string>
+
+    <string name="name_format">Name: %1$s</string>
+    <string name="baby_format">Baby: %1$s</string>
+    <string name="legendary_format">Legendary: %1$s</string>
+    <string name="weight_format">Weight: %1$s</string>
+    <string name="height_format">Height: %1$s</string>
+    <string name="moves">Moves:</string>
+    <string name="stats">Stats:</string>
+    <string name="type">Type:</string>
+    <string name="catch_">Catch!</string>
+    <string name="flee_">Flee!</string>
+    <string name="gotcha_">Gotcha!</string>
+    <string name="found_in_the_high_grass">Found in the high Grass</string>
 </resources>

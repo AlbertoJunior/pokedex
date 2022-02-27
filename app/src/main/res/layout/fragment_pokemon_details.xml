@@ -1,10 +1,235 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".view.pokedex.PokemonDetailsFragment">
+    android:background="@color/green_a20">
 
+    <data>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <variable
+            name="pokemonDetail"
+            type="com.example.pokedex.data.local.model.Pokemon" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginVertical="4dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="4dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:context=".view.pokedex.PokemonDetailsFragment">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="4dp">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="4dp"
+                    android:text="@{@string/name_format(pokemonDetail.nameShow)}"
+                    android:textAlignment="center"
+                    android:textSize="20sp"
+                    android:fontFamily="sans-serif-medium"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="Name: " />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_image"
+                    android:layout_width="0dp"
+                    android:layout_height="240dp"
+                    android:layout_margin="4dp"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_name"
+                    tools:src="@drawable/ic_pokeball" />
+
+                <com.google.android.material.progressindicator.CircularProgressIndicator
+                    android:id="@+id/progress"
+                    style="@style/Widget.Material3.CircularProgressIndicator.Small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:indeterminate="true"
+                    android:indeterminateBehavior="cycle"
+                    app:indicatorColor="@color/red_700"
+                    app:layout_constraintBottom_toBottomOf="@id/iv_image"
+                    app:layout_constraintEnd_toEndOf="@id/iv_image"
+                    app:layout_constraintStart_toStartOf="@id/iv_image"
+                    app:layout_constraintTop_toTopOf="@id/iv_image"
+                    tools:progress="40" />
+
+                <View
+                    android:id="@+id/first_divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_marginVertical="2dp"
+                    android:background="@drawable/divider"
+                    app:colorByText="@{pokemonDetail.pokemonSpecie.color}"
+                    app:layout_constraintTop_toBottomOf="@id/iv_image" />
+
+                <androidx.core.widget.NestedScrollView
+                    android:id="@+id/ns_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:background="@color/black_a20"
+                    android:paddingHorizontal="2dp"
+                    app:layout_constraintBottom_toTopOf="@id/last_divider"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/first_divider">
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="4dp"
+                        android:orientation="vertical">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tv_type"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginVertical="4dp"
+                            android:text="@string/type"
+                            android:textSize="16sp" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tv_baby"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="8dp"
+                            android:layout_marginVertical="4dp"
+                            android:text="Baby"
+                            android:textSize="16sp"
+                            android:visibility="@{pokemonDetail.pokemonSpecie.isBaby() ? 0 : 8}" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tv_mythical"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="8dp"
+                            android:layout_marginVertical="4dp"
+                            android:text="Mythical"
+                            android:textSize="16sp"
+                            android:visibility="@{pokemonDetail.pokemonSpecie.isMythical() ? 0 : 8}" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tv_legendary"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="8dp"
+                            android:layout_marginVertical="4dp"
+                            android:text="Legendary"
+                            android:textSize="16sp"
+                            android:visibility="@{pokemonDetail.pokemonSpecie.isLegendary() ? 0 : 8}" />
+
+                        <com.google.android.material.chip.ChipGroup
+                            android:id="@+id/cg_type"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginVertical="4dp"
+                            android:padding="2dp"
+                            android:visibility="gone"
+                            app:chipSpacing="2dp"
+                            app:itemSpacing="2dp"
+                            tools:visibility="visible">
+
+                        </com.google.android.material.chip.ChipGroup>
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tv_move"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginVertical="4dp"
+                            android:text="@string/moves"
+                            android:textSize="16sp" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tv_stat"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginVertical="4dp"
+                            android:text="@string/stats"
+                            android:textSize="16sp" />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                </androidx.core.widget.NestedScrollView>
+
+                <View
+                    android:id="@+id/last_divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="3dp"
+                    android:layout_marginBottom="54dp"
+                    android:background="@drawable/divider"
+                    app:colorByText="@{pokemonDetail.pokemonSpecie.color}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/a"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:backgroundTint="?colorPrimaryDark"
+            app:cardElevation="6dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:shapeAppearanceOverlay="@style/CardView.RoundedTop">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/bt_flee"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:backgroundTint="@color/white"
+                    android:paddingHorizontal="16dp"
+                    android:text="@string/flee_"
+                    app:cornerRadius="16dp"
+                    app:icon="@drawable/ic_pokeball"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/bt_catch"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/bt_catch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="24dp"
+                    android:text="@string/catch_"
+                    android:textStyle="bold"
+                    app:cornerRadius="16dp"
+                    app:icon="@drawable/ic_pokeball"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/bt_flee" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

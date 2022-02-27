@@ -11,10 +11,10 @@ import com.example.pokedex.R
 import com.example.pokedex.core.Utils
 import com.example.pokedex.core.capitalize
 import com.example.pokedex.data.local.model.Pokemon
-import com.example.pokedex.databinding.ItemPokemonBinding
+import com.example.pokedex.databinding.ItemPokemonPokedexBinding
 import com.example.pokedex.view.pokedex.listeners.PokemonAdapterListener
 
-class PokemonAdapter : ListAdapter<Pokemon, PokemonAdapter.ViewHolder>(DiffCallback) {
+class PokemonPokedexAdapter : ListAdapter<Pokemon, PokemonPokedexAdapter.ViewHolder>(DiffCallback) {
     lateinit var listener: PokemonAdapterListener
 
     private object DiffCallback : DiffUtil.ItemCallback<Pokemon>() {
@@ -24,7 +24,8 @@ class PokemonAdapter : ListAdapter<Pokemon, PokemonAdapter.ViewHolder>(DiffCallb
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val inflate = ItemPokemonBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val inflate =
+            ItemPokemonPokedexBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(inflate, listener)
     }
 
@@ -33,10 +34,11 @@ class PokemonAdapter : ListAdapter<Pokemon, PokemonAdapter.ViewHolder>(DiffCallb
     }
 
     class ViewHolder(
-        private val binding: ItemPokemonBinding,
+        private val binding: ItemPokemonPokedexBinding,
         private val listener: PokemonAdapterListener
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(pokemon: Pokemon) {
+            binding.pokemon = pokemon
             binding.progress.visibility = View.VISIBLE
             binding.tvName.text = pokemon.name.capitalize()
             binding.root.setOnClickListener { listener.onPokemonClicked(pokemon) }

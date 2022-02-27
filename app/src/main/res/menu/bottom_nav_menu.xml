@@ -2,12 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/navigation_home"
+        android:id="@+id/navigation_list_all"
         android:icon="@drawable/ic_grass"
-        android:title="@string/title_home" />
+        android:title="@string/title_grass" />
 
     <item
-        android:id="@+id/navigation_dashboard"
+        android:id="@+id/navigation_my_pokemons"
         android:icon="@drawable/ic_pokeball"
         android:title="@string/title_my_pokedex" />
 </menu>

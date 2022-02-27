@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/navigation_list_all"
         android:name="com.example.pokedex.view.pokedex.ListAllFragment"
-        android:label="@string/title_home"
+        android:label="@string/title_grass"
         tools:layout="@layout/fragment_list_all" >
         <action
             android:id="@+id/action_navigation_list_all_to_navigation_pokemon_details"

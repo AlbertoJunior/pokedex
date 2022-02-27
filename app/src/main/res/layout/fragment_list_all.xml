@@ -6,88 +6,85 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/green_a20"
         tools:context=".view.pokedex.ListAllFragment">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:fontFamily="sans-serif-smallcaps"
+            android:textColor="?colorPrimaryDark"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Message loading"
+            tools:visibility="visible" />
+
+        <androidx.fragment.app.FragmentContainerView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginVertical="4dp"
+            app:layout_constraintBottom_toTopOf="@id/ns_pokemon_list"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_message" />
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/ns_pokemon_list"
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginHorizontal="8dp"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="80dp"
+            android:layout_marginVertical="8dp"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             tools:visibility="visible">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_pokemon_list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:paddingTop="2dp"
-                android:paddingBottom="40dp"
-                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                app:spanCount="2"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:itemCount="8"
                 tools:listitem="@layout/item_pokemon" />
         </androidx.core.widget.NestedScrollView>
 
-        <com.google.android.material.progressindicator.CircularProgressIndicator
-            android:id="@+id/progress"
-            android:layout_width="wrap_content"
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/ll_loading"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:indicatorColor="@color/red_700"
+            android:gravity="center"
+            android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:progress="40" />
+            app:layout_constraintTop_toTopOf="parent">
 
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:cardElevation="6dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:shapeAppearanceOverlay="@style/CardView.RoundedTop">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:id="@+id/cp_progress"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="8dp">
+                android:indeterminate="true"
+                android:indeterminateBehavior="cycle"
+                app:indicatorColor="?colorPrimaryDark" />
 
-                <TextView
-                    android:id="@+id/tv_message"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:textAlignment="center"
-                    android:textColor="?colorPrimary"
-                    android:textSize="16sp"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toTopOf="@id/bt_find"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    tools:text="Message Here"
-                    tools:visibility="visible" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tv_message_loading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:textColor="?colorPrimaryDark"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                tools:text="Message loading" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/bt_find"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/enter_in_grass"
-                    app:icon="@drawable/ic_grass"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </com.google.android.material.card.MaterialCardView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
