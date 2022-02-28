@@ -1,6 +1,5 @@
 package com.example.pokedex.view.pokemon.viewmodel
 
-import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -16,25 +15,15 @@ import javax.inject.Inject
 class PokemonDetailViewModel @Inject constructor(private val repository: PokemonRepository) :
     ViewModel() {
 
-    private val _loadingStatus = MutableLiveData<Int>()
-    val loadingStatus: LiveData<Int> = _loadingStatus
-
     private val _favoriteEvent = MutableLiveData<EventSource<Boolean>?>()
     val favoriteEvent: LiveData<EventSource<Boolean>?> = _favoriteEvent
 
     fun fetchPokemonUltraDetail(id: Long) = repository.fetchPokemonLocal(id, true)
 
-    private fun showLoading() {
-        _loadingStatus.value = View.VISIBLE
-    }
-
-    private fun hideLoading() {
-        _loadingStatus.value = View.GONE
-    }
-
     fun savePokemonFavorite(pokemonId: Long) {
-        showLoading()
         viewModelScope.launch {
+            _favoriteEvent.value = EventSource.Loading("Trying catch")
+
             val fetchPokemonDirect = repository.fetchPokemonDirect(pokemonId)
             if (fetchPokemonDirect != null) {
                 val swapFavoriteStatus = !fetchPokemonDirect.favorite
@@ -46,10 +35,8 @@ class PokemonDetailViewModel @Inject constructor(private val repository: Pokemon
                     "You released ${fetchPokemonDirect.name.capitalize()}"
 
                 _favoriteEvent.value = EventSource.Ready(swapFavoriteStatus, message)
-                hideLoading()
             } else {
                 _favoriteEvent.value = EventSource.Error("The Pokemon broke free!")
-                hideLoading()
             }
         }
     }
@@ -58,16 +45,5 @@ class PokemonDetailViewModel @Inject constructor(private val repository: Pokemon
         _favoriteEvent.value = null
     }
 
-    fun sendPokemonInfo(pokemonId: Long) {
-        viewModelScope.launch {
-            showLoading()
-            if (repository.sendPokemonInfo(pokemonId) == 1) {
-                println("terminou")
-            } else {
-                println("Erro")
-            }
-            hideLoading()
-        }
-    }
-
+    fun sendPokemonInfo(pokemonId: Long) = repository.sendPokemonInfo(pokemonId)
 }

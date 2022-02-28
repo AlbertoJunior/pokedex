@@ -8,10 +8,6 @@
         <variable
             name="pokemonDetail"
             type="com.example.pokedex.data.local.model.Pokemon" />
-
-        <variable
-            name="loadingStatus"
-            type="Integer" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -65,7 +61,7 @@
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/iv_image"
                     android:layout_width="0dp"
-                    android:layout_height="240dp"
+                    android:layout_height="220dp"
                     android:layout_margin="4dp"
                     app:layout_constraintDimensionRatio="1:1"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -97,20 +93,61 @@
                     app:layout_constraintTop_toTopOf="@+id/iv_image"
                     tools:visibility="visible" />
 
-                <com.google.android.material.progressindicator.CircularProgressIndicator
-                    android:id="@+id/progress"
-                    style="@style/Widget.Material3.CircularProgressIndicator.Small"
-                    android:layout_width="wrap_content"
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/mc_load_container"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:indeterminate="true"
-                    android:indeterminateBehavior="cycle"
-                    android:visibility="@{loadingStatus}"
-                    app:indicatorColor="@color/red_700"
+                    android:layout_margin="24dp"
+                    android:clipToPadding="false"
+                    android:visibility="gone"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="8dp"
+                    app:contentPadding="8dp"
                     app:layout_constraintBottom_toTopOf="@+id/last_divider"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_name"
-                    tools:progress="40" />
+                    app:layout_constraintTop_toBottomOf="@+id/tv_name">
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <com.google.android.material.progressindicator.CircularProgressIndicator
+                            android:id="@+id/progress"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="8dp"
+                            android:indeterminate="true"
+                            android:indeterminateBehavior="cycle"
+                            android:visibility="gone"
+                            app:colorByText="@{pokemonDetail.pokemonSpecie.color}"
+                            tools:progress="40"
+                            tools:visibility="visible" />
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/iv_info_loading"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_margin="8dp"
+                            android:visibility="gone"
+                            app:colorByText="@{pokemonDetail.pokemonSpecie.color}"
+                            tools:srcCompat="@drawable/ic_cloud_upload"
+                            tools:visibility="visible" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tv_load_message"
+                            style="@style/PokedexTextDetail"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="8dp"
+                            android:textAlignment="center"
+                            app:textColorByText="@{pokemonDetail.pokemonSpecie.color}"
+                            tools:text="Buscando informações do Pokemon" />
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                </com.google.android.material.card.MaterialCardView>
 
                 <View
                     android:id="@+id/first_divider"
@@ -156,6 +193,49 @@
                             android:layout_marginVertical="4dp"
                             android:text="@{@string/shape_format(pokemonDetail.pokemonSpecie.getShapeShow())}"
                             tools:text="Shape: Quadruped" />
+
+                        <androidx.appcompat.widget.LinearLayoutCompat
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="8dp"
+                            android:layout_marginVertical="4dp"
+                            android:orientation="horizontal">
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/tv_height"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="4dp"
+                                android:layout_weight="1"
+                                android:text="@{@string/height_format(pokemonDetail.getHeightConverted())}"
+                                app:textColorByText="@{pokemonDetail.pokemonSpecie.color}"
+                                tools:text="Height: 0" />
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/tv_weight"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="4dp"
+                                android:layout_weight="1"
+                                android:text="@{@string/weight_format(pokemonDetail.getWeightConverted())}"
+                                app:textColorByText="@{pokemonDetail.pokemonSpecie.color}"
+                                tools:text="Weight: 0" />
+
+                        </androidx.appcompat.widget.LinearLayoutCompat>
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tv_ability"
+                            style="@style/PokedexTextDetail"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginVertical="4dp"
+                            android:text="@string/abilities" />
+
+                        <GridLayout
+                            android:id="@+id/gl_abilities"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:columnCount="2" />
 
                         <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/tv_stat"

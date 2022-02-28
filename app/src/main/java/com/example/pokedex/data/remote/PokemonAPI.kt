@@ -10,6 +10,9 @@ import retrofit2.http.*
 interface PokemonAPI {
     companion object {
         const val BASE_URL = "https://pokeapi.co/api/v2/"
+
+        // manager https://webhook.site/#!/ec6aa581-f5f6-4ceb-979c-b22071aa4fa1
+        const val WEBHOOK = "https://webhook.site/ec6aa581-f5f6-4ceb-979c-b22071aa4fa1"
     }
 
     @GET("pokemon")
@@ -21,13 +24,15 @@ interface PokemonAPI {
     @GET("pokemon/{id}")
     suspend fun fetchPokemonById(@Path("id") id: Long): PokemonDetailedResponse
 
+    @GET("pokemon/{name}")
+    suspend fun fetchPokemonByName(@Path("name") name: String): PokemonDetailedResponse
+
     @GET("pokemon-species/{id}")
     suspend fun fetchSpeciePokemonById(@Path("id") id: Long): PokemonSpecieResponse
 
     @GET("pokemon/{id}/encounters")
     suspend fun fetchEncounterAreaPokemonById(@Path("id") id: Long): Array<LocationAreaEncounterElement>
 
-    // manager https://webhook.site/#!/ec6aa581-f5f6-4ceb-979c-b22071aa4fa1
-    @POST("https://webhook.site/ec6aa581-f5f6-4ceb-979c-b22071aa4fa1")
-    suspend fun postInfo(@Body directPokemon: Pokemon)
+    @POST(WEBHOOK)
+    suspend fun sendPokemonInfo(@Body directPokemon: Pokemon)
 }

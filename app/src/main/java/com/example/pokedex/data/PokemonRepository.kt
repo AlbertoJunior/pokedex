@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.liveData
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import com.example.pokedex.core.EventSource
 import com.example.pokedex.core.capitalize
 import com.example.pokedex.data.local.model.Pokemon
 import com.example.pokedex.data.local.model.PokemonArea
@@ -127,11 +128,17 @@ class PokemonRepository @Inject constructor(
                     }
                     .distinct()
 
+                val abilities = fetchPokemonById.abilities
+                    .mapNotNull {
+                        it.ability?.name?.replace("-", " ")?.capitalize()
+                    }
+                    .distinct()
+
                 val pokemon = Pokemon(
                     pokemonId,
                     directPokemon.name,
                     directPokemon.offset,
-                    fetchPokemonById.abilities,
+                    abilities,
                     moves,
                     fetchPokemonById.height,
                     fetchPokemonById.locationAreaEncounters,
@@ -155,7 +162,7 @@ class PokemonRepository @Inject constructor(
     private suspend fun fetchPokemonOnlineAllDetails(pokemonId: Long) {
         try {
             val directPokemon = pokemonDAO.fetchDirectPokemonById(pokemonId)
-            if (directPokemon.pokemonSpecie == null && directPokemon.species?.url?.isNotEmpty() == true) {
+            if (directPokemon.pokemonSpecie == null && directPokemon.specie?.url?.isNotEmpty() == true) {
                 val fetchSpeciePokemonById = pokemonAPI.fetchSpeciePokemonById(pokemonId)
 
                 val flavorTextEntries = fetchSpeciePokemonById.flavorTextEntries
@@ -215,16 +222,18 @@ class PokemonRepository @Inject constructor(
         pokemonDAO.favoritePokemon(pokemonId, isFavorite)
     }
 
-    suspend fun sendPokemonInfo(pokemonId: Long): Int {
+    fun sendPokemonInfo(pokemonId: Long) = liveData<EventSource<Boolean>?> {
+        emit(EventSource.Loading("Looking for Pokemon information"))
         try {
             pokemonDAO.fetchDirectPokemonById(pokemonId).apply {
-                pokemonAPI.postInfo(this)
-                return 1
+                emit(EventSource.Loading("Sending information from ${this.name}"))
+                pokemonAPI.sendPokemonInfo(this)
+                emit(EventSource.Ready(true, "Pokemon info sent"))
             }
         } catch (e: Exception) {
             Log.e("PokemonRepository", e.message ?: "fetchPokemonOnlineEncounterArea")
+            emit(EventSource.Error("Error fetching or sending Pokemon information"))
         }
-        return -1
     }
 
 }

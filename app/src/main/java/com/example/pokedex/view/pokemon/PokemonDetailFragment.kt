@@ -3,8 +3,8 @@ package com.example.pokedex.view.pokemon
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.*
-import android.view.animation.AnimationUtils
 import android.widget.GridLayout
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -72,22 +72,39 @@ class PokemonDetailFragment : Fragment() {
 
     private fun callObservers() {
         viewModelDetails.favoriteEvent.observe(viewLifecycleOwner) { eventSource ->
-            eventSource?.let { event ->
-                event.message?.let { message ->
-                    if (event is EventSource.Ready) {
-                        val anim = if (event.value) R.anim.fade_in else R.anim.fade_out
-                        AnimationUtils.loadAnimation(requireContext(), anim).also { animation ->
-                            animation.duration = 300
-                            binding.ivImageFavorite.animation = animation
-                        }.start()
-                    }
-                }
-                viewModelDetails.clearFavoriteEvent()
-            }
-        }
+            binding.mcLoadContainer.isVisible = eventSource != null
+            binding.progress.isVisible = eventSource is EventSource.Loading
+            binding.ivInfoLoading.isVisible = false
 
-        viewModelDetails.loadingStatus.observe(viewLifecycleOwner) {
-            binding.loadingStatus = it
+            eventSource?.let { event ->
+                binding.tvLoadMessage.text = event.message ?: ""
+
+                if (event !is EventSource.Loading) {
+                    binding.ivInfoLoading.isVisible = true
+
+                    val icon = when (event) {
+                        is EventSource.Error -> R.drawable.ic_alert_circle
+                        is EventSource.Ready -> if (event.value) R.drawable.ic_pokeball else R.drawable.ic_flee
+                        else -> R.drawable.ic_alert_circle
+                    }
+                    binding.ivInfoLoading.setImageDrawable(
+                        ContextCompat.getDrawable(requireContext(), icon)
+                    )
+
+                    if (event is EventSource.Ready) {
+                        Utils.fade(event.value, binding.ivImageFavorite)
+                    }
+
+                    Utils.fade(
+                        false,
+                        binding.mcLoadContainer, binding.ivInfoLoading,
+                        duration = 800,
+                        delay = 800,
+                        listenerOnAnimationEnd = {
+                            viewModelDetails.clearFavoriteEvent()
+                        })
+                }
+            }
         }
     }
 
@@ -121,6 +138,36 @@ class PokemonDetailFragment : Fragment() {
 
         binding.btSend.setOnClickListener {
             viewModelDetails.sendPokemonInfo(args.pokemonId)
+                .observe(viewLifecycleOwner) { eventSource ->
+                    binding.mcLoadContainer.isVisible = eventSource != null
+                    binding.progress.isVisible = eventSource is EventSource.Loading
+                    binding.ivInfoLoading.isVisible = false
+
+                    eventSource?.let { event ->
+                        binding.tvLoadMessage.text = event.message ?: ""
+
+                        if (event !is EventSource.Loading) {
+                            binding.ivInfoLoading.isVisible = true
+
+                            val icon = when (event) {
+                                is EventSource.Error -> R.drawable.ic_alert_circle
+                                is EventSource.Ready -> R.drawable.ic_cloud_upload
+                                else -> R.drawable.ic_alert_circle
+                            }
+                            binding.ivInfoLoading.setImageDrawable(
+                                ContextCompat.getDrawable(requireContext(), icon)
+                            )
+
+                            Utils.fade(
+                                false,
+                                binding.mcLoadContainer,
+                                binding.ivInfoLoading,
+                                duration = 800,
+                                delay = 800
+                            )
+                        }
+                    }
+                }
         }
 
         binding.btBack.setOnClickListener {
@@ -138,12 +185,10 @@ class PokemonDetailFragment : Fragment() {
             binding.ivImageFavorite.isVisible = it.favorite
 
             mountChipGroup(binding.cgType, it.types)
-            mountChipGroup(
-                binding.cgEncounterGroup,
-                it.pokemonArea.map { area -> area.name }
-            )
+            mountChipGroup(binding.cgEncounterGroup, it.pokemonArea.map { area -> area.name })
+            mountGridGroup(it.abilities, binding.glAbilities)
+            mountGridGroup(it.moves, binding.glMoves)
             mountStats(it)
-            mountMoves(it)
 
             Utils.loadImageGlide(
                 requireContext(), it.getImage(), binding.ivImage, R.drawable.ic_pokeball,
@@ -156,16 +201,12 @@ class PokemonDetailFragment : Fragment() {
         }
     }
 
-    private fun mountMoves(pokemon: Pokemon) {
-        pokemon.moves?.let { moves ->
-            if (moves.isNotEmpty()) {
-                binding.glMoves.removeAllViews()
-                binding.glMoves.visibility = View.VISIBLE
-            } else {
-                binding.glMoves.visibility = View.GONE
-            }
+    private fun mountGridGroup(list: List<String>?, gridLayout: GridLayout) {
+        list?.let { abilities ->
+            gridLayout.removeAllViews()
+            gridLayout.isVisible = abilities.isNotEmpty()
 
-            moves.forEach { move ->
+            abilities.forEach { move ->
                 val button = MaterialButton(requireContext()).apply {
                     text = move
                     layoutParams = GridLayout.LayoutParams(
@@ -176,19 +217,15 @@ class PokemonDetailFragment : Fragment() {
                         marginEnd = 4
                     }
                 }
-                binding.glMoves.addView(button)
+                gridLayout.addView(button)
             }
         }
     }
 
     private fun mountStats(pokemon: Pokemon) {
         pokemon.stats?.let { stats ->
-            if (stats.isNotEmpty()) {
-                binding.llStatsGroup.removeAllViews()
-                binding.llStatsGroup.visibility = View.VISIBLE
-            } else {
-                binding.llStatsGroup.visibility = View.GONE
-            }
+            binding.llStatsGroup.removeAllViews()
+            binding.llStatsGroup.isVisible = stats.isNotEmpty()
 
             stats.forEach {
                 val textView = MaterialTextView(requireContext()).apply {

@@ -8,10 +8,11 @@
     <string name="name_format">Name: %1$s</string>
     <string name="baby_format">Baby: %1$s</string>
     <string name="legendary_format">Legendary: %1$s</string>
-    <string name="weight_format">Weight: %1$s</string>
-    <string name="height_format">Height: %1$s</string>
+    <string name="weight_format">Weight: %1$s kg</string>
+    <string name="height_format">Height: %1$s m</string>
     <string name="moves">Moves:</string>
     <string name="stats">Stats:</string>
+    <string name="abilities">Abilities:</string>
     <string name="stat_format">%1$s: %2$s</string>
     <string name="type">Type:</string>
     <string name="catch_">Catch!</string>

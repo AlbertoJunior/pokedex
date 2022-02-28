@@ -21,9 +21,6 @@ class PokemonViewModel @Inject constructor(private val repository: PokemonReposi
     private val _bottomNavigationStatus = MutableLiveData<Int>()
     val bottomNavigationStatus: LiveData<Int> = _bottomNavigationStatus
 
-    private val _navigation = MutableLiveData<Int>()
-    val navigation: LiveData<Int> = _navigation
-
     fun fetchPokemonList(): LiveData<EventSource<List<Pokemon>>> {
         showLoading()
         return Transformations.switchMap(repository.fetchListPokemonLocal()) {

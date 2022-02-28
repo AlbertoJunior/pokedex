@@ -84,11 +84,23 @@ class PokedexFragment : Fragment() {
         }
     }
 
+    private fun addFragment(fragment: Fragment) {
+        requireActivity().supportFragmentManager
+            .beginTransaction()
+            .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
+            .add(R.id.fragment_container, fragment)
+            .commit()
+    }
+
     private fun replaceFragment(fragment: Fragment) {
         requireActivity().supportFragmentManager
             .beginTransaction()
             .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
             .replace(R.id.fragment_container, fragment)
             .commit()
+    }
+
+    private fun popBackStack() {
+        requireActivity().supportFragmentManager.popBackStack()
     }
 }

@@ -93,7 +93,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="4dp"
                             android:layout_weight="1"
-                            android:text="@{@string/height_format(pokemon.height)}"
+                            android:text="@{@string/height_format(pokemon.getHeightConverted())}"
                             android:textStyle="bold"
                             app:textColorByText="@{pokemon.pokemonSpecie.color}"
                             tools:text="Height: 0" />
@@ -104,7 +104,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="4dp"
                             android:layout_weight="1"
-                            android:text="@{@string/weight_format(pokemon.weight)}"
+                            android:text="@{@string/weight_format(pokemon.getWeightConverted())}"
                             android:textStyle="bold"
                             app:textColorByText="@{pokemon.pokemonSpecie.color}"
                             tools:text="Weight: 0" />
