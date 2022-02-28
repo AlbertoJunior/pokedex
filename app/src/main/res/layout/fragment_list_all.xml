@@ -10,8 +10,8 @@
         tools:context=".view.pokedex.PokedexFragment">
 
         <com.google.android.material.textview.MaterialTextView
-            style="@style/PokedexTextTitle"
             android:id="@+id/tv_message"
+            style="@style/PokedexTextTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="gone"
@@ -26,31 +26,25 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginVertical="4dp"
-            app:layout_constraintBottom_toTopOf="@id/ns_pokemon_list"
+            app:layout_constraintBottom_toTopOf="@id/rv_pokemon_list"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_message" />
 
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/ns_pokemon_list"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_pokemon_list"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginVertical="8dp"
-            android:visibility="gone"
+            android:clipToPadding="false"
+            android:orientation="horizontal"
+            android:paddingHorizontal="8dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            tools:visibility="visible">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_pokemon_list"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:itemCount="8"
-                tools:listitem="@layout/item_pokemon" />
-        </androidx.core.widget.NestedScrollView>
+            tools:itemCount="8"
+            tools:listitem="@layout/item_pokemon" />
 
         <View
             android:layout_width="32dp"
@@ -58,7 +52,7 @@
             android:background="@drawable/grandient_linear_horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/ns_pokemon_list" />
+            app:layout_constraintTop_toTopOf="@id/rv_pokemon_list" />
 
         <View
             android:layout_width="32dp"
@@ -67,7 +61,7 @@
             android:rotation="180"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/ns_pokemon_list" />
+            app:layout_constraintTop_toTopOf="@id/rv_pokemon_list" />
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/ll_loading"

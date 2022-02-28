@@ -6,15 +6,14 @@ import android.view.*
 import android.view.animation.AnimationUtils
 import android.widget.GridLayout
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.pokedex.R
 import com.example.pokedex.core.EventSource
 import com.example.pokedex.core.Utils
-import com.example.pokedex.core.capitalize
 import com.example.pokedex.data.local.model.Pokemon
 import com.example.pokedex.databinding.FragmentPokemonDetailsBinding
 import com.example.pokedex.view.pokedex.viewmodel.PokemonViewModel
@@ -29,7 +28,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class PokemonDetailFragment : Fragment() {
     private lateinit var binding: FragmentPokemonDetailsBinding
-    private lateinit var navController: NavController
+    private val navController by lazy { findNavController() }
 
     private val args by navArgs<PokemonDetailFragmentArgs>()
     private val viewModel by activityViewModels<PokemonViewModel>()
@@ -55,7 +54,6 @@ class PokemonDetailFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentPokemonDetailsBinding.inflate(inflater, container, false)
-        navController = findNavController()
         return binding.root
     }
 
@@ -65,9 +63,7 @@ class PokemonDetailFragment : Fragment() {
             viewModel.hideBottomNav()
         }
 
-        if (args.hideButtons) {
-            binding.containerButtons.visibility = View.GONE
-        }
+        binding.containerButtons.isVisible = !args.hideButtons
 
         setupListeners()
         loadPokemon()
@@ -123,12 +119,15 @@ class PokemonDetailFragment : Fragment() {
             true
         }
 
-        binding.btFlee.setOnClickListener {
-            navController.navigateUp()
+        binding.btSend.setOnClickListener {
+            viewModelDetails.sendPokemonInfo(args.pokemonId)
         }
 
         binding.btBack.setOnClickListener {
-            navController.navigateUp()
+            if (args.hideButtons)
+                requireActivity().onBackPressed()
+            else
+                navController.navigateUp()
         }
     }
 
@@ -136,12 +135,12 @@ class PokemonDetailFragment : Fragment() {
         viewModelDetails.fetchPokemonUltraDetail(args.pokemonId).observe(viewLifecycleOwner) {
             binding.pokemonDetail = it
 
-            binding.ivImageFavorite.visibility = if (it.favorite) View.VISIBLE else View.GONE
+            binding.ivImageFavorite.isVisible = it.favorite
 
             mountChipGroup(binding.cgType, it.types)
             mountChipGroup(
                 binding.cgEncounterGroup,
-                it.pokemonArea.map { area -> area.name.replace("-", " ") }
+                it.pokemonArea.map { area -> area.name }
             )
             mountStats(it)
             mountMoves(it)
@@ -199,7 +198,7 @@ class PokemonDetailFragment : Fragment() {
                     )
                     textSize = 14F
 
-                    val statsName = it.name.replace("-", " ").capitalize()
+                    val statsName = it.name
                     text = getString(R.string.stat_format, statsName, it.base.toString())
                 }
                 binding.llStatsGroup.addView(textView)
@@ -208,13 +207,8 @@ class PokemonDetailFragment : Fragment() {
     }
 
     private fun mountChipGroup(group: ChipGroup, listName: List<String>) {
-        if (listName.isNotEmpty()) {
-            group.removeAllViews()
-            group.visibility = View.VISIBLE
-        } else {
-            group.visibility = View.GONE
-        }
-
+        group.removeAllViews()
+        group.isVisible = listName.isNotEmpty()
         listName.forEach { type ->
             group.addView(createChipItem(type))
         }
@@ -222,7 +216,7 @@ class PokemonDetailFragment : Fragment() {
 
     private fun createChipItem(textValue: String): Chip {
         return Chip(requireContext()).apply {
-            text = textValue.capitalize()
+            text = textValue
             chipEndPadding = 8F
             chipStartPadding = 8F
         }

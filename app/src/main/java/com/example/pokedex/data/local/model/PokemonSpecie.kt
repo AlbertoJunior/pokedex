@@ -15,4 +15,6 @@ data class PokemonSpecie(
     val shape: String? = null
 ) {
     fun getHabitatShow() = habitat?.replace("-", " ")?.capitalize() ?: ""
+
+    fun getShapeShow() = shape?.replace("-", " ")?.capitalize() ?: ""
 }

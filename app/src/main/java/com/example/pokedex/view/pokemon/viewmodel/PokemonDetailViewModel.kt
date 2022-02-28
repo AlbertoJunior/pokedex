@@ -58,4 +58,16 @@ class PokemonDetailViewModel @Inject constructor(private val repository: Pokemon
         _favoriteEvent.value = null
     }
 
+    fun sendPokemonInfo(pokemonId: Long) {
+        viewModelScope.launch {
+            showLoading()
+            if (repository.sendPokemonInfo(pokemonId) == 1) {
+                println("terminou")
+            } else {
+                println("Erro")
+            }
+            hideLoading()
+        }
+    }
+
 }

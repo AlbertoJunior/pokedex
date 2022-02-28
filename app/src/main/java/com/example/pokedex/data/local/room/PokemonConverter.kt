@@ -5,7 +5,6 @@ import com.example.pokedex.data.local.model.PokemonArea
 import com.example.pokedex.data.local.model.PokemonSpecie
 import com.example.pokedex.data.local.model.Stat
 import com.example.pokedex.data.remote.model.Ability
-import com.example.pokedex.data.remote.model.Move
 import com.example.pokedex.data.remote.model.NameUrlObject
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -20,18 +19,6 @@ class PokemonConverter {
 
     @TypeConverter
     fun abilityToString(value: List<Ability>?): String? {
-        return Gson().toJson(value)
-    }
-
-    @TypeConverter
-    fun movesFromString(value: String?): List<Move>? {
-        if (value == null)
-            return emptyList()
-        return Gson().fromJson(value, object : TypeToken<List<Move>>() {}.type)
-    }
-
-    @TypeConverter
-    fun moveToString(value: List<Move>?): String? {
         return Gson().toJson(value)
     }
 

@@ -7,7 +7,7 @@ import com.example.pokedex.data.local.model.Pokemon
 
 @Database(
     entities = [Pokemon::class],
-    version = 2,
+    version = 1,
     exportSchema = false
 )
 @TypeConverters(PokemonConverter::class)

@@ -27,6 +27,11 @@ fun View.colorByText(value: String?) {
         "blue" -> R.color.blue_550
         "black" -> R.color.black_700
         "white" -> R.color.white_700
+
+        "brown" -> R.color.white_700
+        "gray" -> R.color.white_700
+        "pink" -> R.color.white_700
+        "purple" -> R.color.white_700
         else -> R.color.blue_700
     }
 

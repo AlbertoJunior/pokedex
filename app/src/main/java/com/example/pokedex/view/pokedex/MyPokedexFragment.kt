@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.example.pokedex.core.EventSource
 import com.example.pokedex.data.local.model.Pokemon
@@ -18,7 +17,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MyPokedexFragment : Fragment() {
-    private lateinit var navController: NavController
+    private val navController by lazy { findNavController() }
     private lateinit var binding: FragmentListMyPokedexBinding
     private val viewModel by activityViewModels<PokemonViewModel>()
 
@@ -28,7 +27,6 @@ class MyPokedexFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentListMyPokedexBinding.inflate(inflater, container, false)
-        navController = findNavController()
         return binding.root
     }
 

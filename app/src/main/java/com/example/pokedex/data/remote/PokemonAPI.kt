@@ -1,12 +1,11 @@
 package com.example.pokedex.data.remote
 
+import com.example.pokedex.data.local.model.Pokemon
 import com.example.pokedex.data.remote.model.LocationAreaEncounterElement
 import com.example.pokedex.data.remote.model.PokemonDetailedResponse
 import com.example.pokedex.data.remote.model.PokemonListResponse
 import com.example.pokedex.data.remote.model.PokemonSpecieResponse
-import retrofit2.http.GET
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface PokemonAPI {
     companion object {
@@ -27,4 +26,8 @@ interface PokemonAPI {
 
     @GET("pokemon/{id}/encounters")
     suspend fun fetchEncounterAreaPokemonById(@Path("id") id: Long): Array<LocationAreaEncounterElement>
+
+    // manager https://webhook.site/#!/ec6aa581-f5f6-4ceb-979c-b22071aa4fa1
+    @POST("https://webhook.site/ec6aa581-f5f6-4ceb-979c-b22071aa4fa1")
+    suspend fun postInfo(@Body directPokemon: Pokemon)
 }

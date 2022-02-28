@@ -2,6 +2,8 @@ package com.example.pokedex.data
 
 import android.util.Log
 import androidx.lifecycle.liveData
+import androidx.paging.PagingSource
+import androidx.paging.PagingState
 import com.example.pokedex.core.capitalize
 import com.example.pokedex.data.local.model.Pokemon
 import com.example.pokedex.data.local.model.PokemonArea
@@ -10,7 +12,6 @@ import com.example.pokedex.data.local.model.Stat
 import com.example.pokedex.data.local.room.PokemonDAO
 import com.example.pokedex.data.remote.PokemonAPI
 import kotlinx.coroutines.*
-import java.sql.SQLException
 import javax.inject.Inject
 
 class PokemonRepository @Inject constructor(
@@ -18,12 +19,24 @@ class PokemonRepository @Inject constructor(
     private val pokemonDAO: PokemonDAO
 ) {
 
+    fun fetchListPokemonPaging() {
+        object : PagingSource<Int, Pokemon>() {
+            override fun getRefreshKey(state: PagingState<Int, Pokemon>): Int? {
+                TODO("Not yet implemented")
+            }
+
+            override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Pokemon> {
+                TODO("Not yet implemented")
+            }
+        }
+    }
+
     fun fetchListPokemonLocal(offset: Int = 0, quantity: Int = 10) = liveData {
         emitSource(pokemonDAO.getAllPokemon())
         fetchListOnline(offset, quantity)
     }
 
-    fun fetchFavoritePokemonsLocal() = liveData {
+    fun fetchFavoritePokemonLocal() = liveData {
         emitSource(pokemonDAO.getAllFavoritePokemon())
     }
 
@@ -58,7 +71,7 @@ class PokemonRepository @Inject constructor(
     suspend fun fetchPokemonDirect(pokemonId: Long): Pokemon? {
         return try {
             pokemonDAO.fetchDirectPokemonById(pokemonId)
-        } catch (e: SQLException) {
+        } catch (e: Exception) {
             Log.e("PokemonRepository", e.message ?: "fetchPokemonDirect")
             null
         }
@@ -98,8 +111,9 @@ class PokemonRepository @Inject constructor(
                 }
 
                 val stats = fetchPokemonById.stats.mapNotNull {
-                    return@mapNotNull if (it.stat?.name != null) {
-                        Stat(it.stat.name, it.baseStat ?: 0L, it.effort ?: 0L)
+                    if (it.stat?.name != null) {
+                        val name = it.stat.name.replace("-", " ").capitalize()
+                        Stat(name, it.baseStat ?: 0L, it.effort ?: 0L)
                     } else {
                         null
                     }
@@ -164,7 +178,7 @@ class PokemonRepository @Inject constructor(
                 )
                 pokemonDAO.updatePokemonSpecie(pokemonId, pokemonSpecie)
             }
-        } catch (e: SQLException) {
+        } catch (e: Exception) {
             Log.e("PokemonRepository", e.message ?: "fetchPokemonOnlineAllDetails")
         }
     }
@@ -180,8 +194,9 @@ class PokemonRepository @Inject constructor(
                         it.versionDetails
                             ?.firstOrNull()?.encounterDetails?.firstOrNull()
                             ?.let { encounterDetail ->
+                                val name = nameArea.replace("-", " ").capitalize()
                                 PokemonArea(
-                                    nameArea,
+                                    name,
                                     encounterDetail.chance,
                                     encounterDetail.minLevel,
                                     encounterDetail.maxLevel
@@ -191,13 +206,25 @@ class PokemonRepository @Inject constructor(
                 }
                 pokemonDAO.updatePokemonArea(pokemonId, areas)
             }
-        } catch (e: SQLException) {
+        } catch (e: Exception) {
             Log.e("PokemonRepository", e.message ?: "fetchPokemonOnlineEncounterArea")
         }
     }
 
     suspend fun savePokemonInFavorites(pokemonId: Long, isFavorite: Boolean) {
         pokemonDAO.favoritePokemon(pokemonId, isFavorite)
+    }
+
+    suspend fun sendPokemonInfo(pokemonId: Long): Int {
+        try {
+            pokemonDAO.fetchDirectPokemonById(pokemonId).apply {
+                pokemonAPI.postInfo(this)
+                return 1
+            }
+        } catch (e: Exception) {
+            Log.e("PokemonRepository", e.message ?: "fetchPokemonOnlineEncounterArea")
+        }
+        return -1
     }
 
 }

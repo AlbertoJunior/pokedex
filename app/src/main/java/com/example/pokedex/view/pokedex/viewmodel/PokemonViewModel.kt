@@ -39,7 +39,7 @@ class PokemonViewModel @Inject constructor(private val repository: PokemonReposi
 
     fun fetchFavoritePokemonList(): LiveData<EventSource<List<Pokemon>>> {
         showLoading()
-        return Transformations.switchMap(repository.fetchFavoritePokemonsLocal()) {
+        return Transformations.switchMap(repository.fetchFavoritePokemonLocal()) {
             hideLoading()
             val value: EventSource<List<Pokemon>> = if (it.isNotEmpty()) {
                 EventSource.Ready(it)

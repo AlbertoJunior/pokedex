@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.example.pokedex.R
 import com.example.pokedex.core.EventSource
@@ -24,13 +23,12 @@ class PokedexFragment : Fragment() {
     private val viewModel by activityViewModels<PokemonViewModel>()
 
     private lateinit var binding: FragmentListAllBinding
-    private lateinit var navController: NavController
+    private val navController by lazy { findNavController() }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         binding = FragmentListAllBinding.inflate(inflater)
-        navController = findNavController()
         return binding.root
     }
 
@@ -62,17 +60,17 @@ class PokedexFragment : Fragment() {
         viewModel.fetchPokemonList().observe(viewLifecycleOwner) {
             when (it) {
                 is EventSource.Error -> {
-                    binding.nsPokemonList.visibility = View.GONE
+                    binding.rvPokemonList.visibility = View.GONE
                     binding.llLoading.visibility = View.GONE
                     binding.tvMessage.text = it.message
                 }
                 is EventSource.Loading -> {
-                    binding.nsPokemonList.visibility = View.GONE
+                    binding.rvPokemonList.visibility = View.GONE
                     binding.llLoading.visibility = View.VISIBLE
                     binding.tvFloatingMessage.text = it.message
                 }
                 is EventSource.Ready -> {
-                    binding.nsPokemonList.visibility = View.VISIBLE
+                    binding.rvPokemonList.visibility = View.VISIBLE
                     binding.llLoading.visibility = View.GONE
 
                     if (it.message?.isNotEmpty() == true) {
