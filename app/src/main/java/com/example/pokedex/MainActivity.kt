@@ -27,9 +27,9 @@ class MainActivity : AppCompatActivity() {
             setupWithNavController(navController)
         }
 
-        viewModel.loadingStatus.observe(this) {
-            binding.progress.visibility = it
-        }
+//        viewModel.loadingStatus.observe(this) {
+//            binding.progress.visibility = it
+//        }
 
         viewModel.bottomNavigationStatus.observe(this) {
             binding.navView.visibility = it

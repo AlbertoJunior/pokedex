@@ -2,7 +2,6 @@ package com.example.pokedex.core
 
 import android.content.Context
 import android.graphics.drawable.Drawable
-import android.util.Log
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
@@ -34,7 +33,6 @@ class Utils {
                         target: Target<Drawable>?,
                         isFirstResource: Boolean
                     ): Boolean {
-                        Log.e("loadImageGlide", e?.message ?: "onLoadFailed")
                         listenerOnError.invoke()
                         return false
                     }

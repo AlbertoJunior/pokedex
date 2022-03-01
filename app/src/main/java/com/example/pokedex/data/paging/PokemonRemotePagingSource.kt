@@ -1,9 +1,10 @@
-package com.example.pokedex.data
+package com.example.pokedex.data.paging
 
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
+import com.example.pokedex.data.PokemonRepository
 import com.example.pokedex.data.local.model.Pokemon
 
 @ExperimentalPagingApi
@@ -30,10 +31,13 @@ class PokemonRemotePagingSource(
         }
 
         return try {
+            if (offset < 0)
+                return MediatorResult.Success(true)
+
             val response = pokemonRepository.fetchListOnline(offset, state.config.pageSize)
-            pokemonRepository.insert(response)
+            pokemonRepository.insertPokemonList(response)
             val fetchPokemonDetails = pokemonRepository.fetchPokemonDetails(response)
-            pokemonRepository.insert(fetchPokemonDetails)
+            pokemonRepository.insertPokemonList(fetchPokemonDetails)
 
             return MediatorResult.Success(fetchPokemonDetails.isEmpty())
         } catch (e: Exception) {

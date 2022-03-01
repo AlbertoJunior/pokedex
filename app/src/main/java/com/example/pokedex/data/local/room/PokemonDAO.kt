@@ -20,16 +20,16 @@ interface PokemonDAO {
     suspend fun insertPokemons(pokemon: List<Pokemon>)
 
     @Query("SELECT * FROM Pokemon WHERE `offset` = :offset ORDER BY id ASC LIMIT :quantity")
-    fun fetchPokemons(offset: Int, quantity: Int): LiveData<List<Pokemon>>
+    fun fetchPokemonList(offset: Int, quantity: Int): LiveData<List<Pokemon>>
 
     @Query("SELECT * FROM Pokemon ORDER BY id ASC")
-    fun fetchPokemonsPaging(): PagingSource<Int, Pokemon>
+    fun fetchPokemonPaging(): PagingSource<Int, Pokemon>
 
     @Query("SELECT * FROM Pokemon ORDER BY id ASC LIMIT 100")
-    fun getAllPokemon(): LiveData<List<Pokemon>>
+    fun fetchAllPokemon(): LiveData<List<Pokemon>>
 
     @Query("SELECT * FROM Pokemon WHERE favorite = 1 ORDER BY id ASC")
-    fun getAllFavoritePokemon(): LiveData<List<Pokemon>>
+    fun fetchAllFavoritePokemon(): LiveData<List<Pokemon>>
 
     @Query("SELECT * FROM Pokemon WHERE id =:id")
     fun fetchPokemonById(id: Long): LiveData<Pokemon>

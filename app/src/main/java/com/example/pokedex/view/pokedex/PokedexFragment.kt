@@ -44,31 +44,45 @@ class PokedexFragment : Fragment() {
             var lastPokemonId = 0L
             override fun onPokemonClicked(pokemon: Pokemon) {
                 val showingLottie =
-                    requireActivity().supportFragmentManager.fragments.find { it is LottieFragment } != null
+                    childFragmentManager.fragments.find { it is LottieFragment } != null
 
-                if (showingLottie || pokemon.id != lastPokemonId) {
-                    lastPokemonId = pokemon.id
-                    replaceFragment(PokemonDetailFragment.newInstance(pokemon.id))
-                } else
-                    replaceFragment(LottieFragment.newInstance())
+                when {
+                    showingLottie -> {
+                        lastPokemonId = pokemon.id
+                        viewModel.setPokemonId(pokemon.id)
+                        replaceFragment(PokemonDetailFragment.newInstance(pokemon.id), true)
+                    }
+                    lastPokemonId == pokemon.id -> {
+                        lastPokemonId = 0L
+                        viewModel.setPokemonId(null)
+                        replaceFragment(LottieFragment.newInstance())
+                    }
+                    else -> {
+                        lastPokemonId = pokemon.id
+                        viewModel.setPokemonId(pokemon.id)
+                    }
+                }
             }
         }
 
         val adapter = PokemonAdapter(listener)
         binding.rvPokemonList.adapter = adapter
         lifecycleScope.launch {
-            viewModel.pokemonPaging.collect {
+            viewModel.pokemonListAllPaging.collect {
                 binding.cpProgress.isVisible = false
                 adapter.submitData(it)
             }
         }
     }
 
-    private fun replaceFragment(fragment: Fragment) {
-        requireActivity().supportFragmentManager
+    private fun replaceFragment(fragment: Fragment, add: Boolean = false) {
+        childFragmentManager
             .beginTransaction()
-            .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
+            .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
             .replace(R.id.fragment_container, fragment)
+            .apply {
+                if (add) addToBackStack(fragment.javaClass.simpleName)
+            }
             .commit()
     }
 }

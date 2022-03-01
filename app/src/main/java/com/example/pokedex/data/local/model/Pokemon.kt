@@ -33,6 +33,10 @@ data class Pokemon(
         url.isNotEmpty() && url.isNotBlank() && !url.endsWith(".svg")
     } ?: ""
 
+    fun getImageOfficial() = sprites?.firstOrNull { url ->
+        url.isNotEmpty() && url.isNotBlank() && !url.endsWith(".svg") && url.contains("official")
+    } ?: ""
+
     fun getWeightConverted() = weight?.div(10F) ?: 0.0F
 
     fun getHeightConverted() = height?.div(10F) ?: 0.0F

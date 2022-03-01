@@ -37,7 +37,7 @@ fun View.colorByText(value: String?) {
     }
 }
 
-private fun getColor(value: String?): Int {
+fun getColor(value: String?): Int {
     val color = when (value) {
         "yellow" -> R.color.yellow_200
         "red" -> R.color.red_700

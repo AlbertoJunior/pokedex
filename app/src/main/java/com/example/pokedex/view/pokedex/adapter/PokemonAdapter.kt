@@ -1,6 +1,5 @@
 package com.example.pokedex.view.pokedex.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -39,16 +38,12 @@ class PokemonAdapter(val listener: PokemonAdapterListener) :
         private val listener: PokemonAdapterListener
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(pokemon: Pokemon?) {
-            if (pokemon != null) {
-                setupInfos(pokemon)
-            } else {
-                placeHolder()
-            }
+            if (pokemon != null) setupInfos(pokemon) else placeHolder()
         }
 
         private fun placeHolder() {
             binding.progress.visibility = View.VISIBLE
-            binding.tvName.text = "Hunting".capitalize()
+            binding.tvName.setText(R.string.hunting_)
             binding.ivImageFavorite.isVisible = false
         }
 
@@ -69,15 +64,10 @@ class PokemonAdapter(val listener: PokemonAdapterListener) :
                         url,
                         binding.ivImage,
                         R.drawable.ic_pokemon_go,
-                        listenerOnReady = {
-                            binding.progress.visibility = View.GONE
-                            Log.d("PokemonAdapter", "onResourceReady")
-                        },
-                        listenerOnError = {
-                            binding.progress.visibility = View.GONE
-                            Log.e("PokemonAdapter", "onLoadFailed")
-                        })
+                        listenerOnReady = { binding.progress.visibility = View.GONE },
+                        listenerOnError = { binding.progress.visibility = View.GONE })
                 } else {
+                    binding.progress.visibility = View.GONE
                     binding.ivImage.setImageResource(R.drawable.ic_pokemon_go)
                 }
             }

@@ -63,18 +63,48 @@
                     android:layout_width="0dp"
                     android:layout_height="220dp"
                     android:layout_margin="4dp"
+                    android:clickable="true"
+                    android:focusable="true"
                     app:layout_constraintDimensionRatio="1:1"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tv_name"
                     tools:src="@drawable/ic_pokeball" />
 
+                <com.google.android.material.progressindicator.CircularProgressIndicator
+                    android:id="@+id/progress_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:indicatorColor="?colorPrimary"
+                    app:layout_constraintBottom_toBottomOf="@id/iv_image"
+                    app:layout_constraintEnd_toEndOf="@id/iv_image"
+                    app:layout_constraintStart_toStartOf="@id/iv_image"
+                    app:layout_constraintTop_toTopOf="@id/iv_image"
+                    tools:progress="89"
+                    tools:visibility="visible" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/bt_flavor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_book"
+                    app:colorByText="@{pokemonDetail.pokemonSpecie.color}"
+                    app:layout_constraintBottom_toTopOf="@id/bt_help"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/bt_help"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="4dp"
-                    android:padding="4dp"
+                    android:layout_margin="8dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="8dp"
                     android:src="@drawable/ic_help"
                     app:colorByText="@{pokemonDetail.pokemonSpecie.color}"
                     app:layout_constraintBottom_toBottomOf="@id/iv_image"
@@ -346,6 +376,12 @@
                             tools:itemCount="4"
                             tools:listitem="@layout/item_generic_adapter" />
 
+                        <View
+                            android:id="@+id/aux_padding"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginVertical="20dp" />
+
                     </androidx.appcompat.widget.LinearLayoutCompat>
 
                 </androidx.core.widget.NestedScrollView>
@@ -393,7 +429,8 @@
                     app:icon="@drawable/ic_cloud_upload"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/bt_catch"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:textColorByText="@{pokemonDetail.pokemonSpecie.color}" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/bt_catch"

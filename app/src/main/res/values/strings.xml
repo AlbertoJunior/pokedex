@@ -21,6 +21,7 @@
     <string name="send_">Send!</string>
     <string name="gotcha_">Gotcha!</string>
     <string name="release_">Release!</string>
+    <string name="hunting_">Hunting!</string>
     <string name="found_in_the_high_grass">Found in the high Grass</string>
     <string name="found_on">Found on:</string>
     <string name="baby">Baby</string>
@@ -30,4 +31,5 @@
     <string name="natural_habitat_format">Natural Habitat: %1$s</string>
     <string name="shape_format">Shape: %1$s</string>
     <string name="my_pokemons">My Pokemons!</string>
+    <string name="double_tap_message">Double tap on image to catch or release this Pokemon</string>
 </resources>

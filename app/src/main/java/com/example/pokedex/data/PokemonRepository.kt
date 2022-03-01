@@ -2,7 +2,6 @@ package com.example.pokedex.data
 
 import android.util.Log
 import androidx.lifecycle.liveData
-import com.example.pokedex.core.EventSource
 import com.example.pokedex.core.capitalize
 import com.example.pokedex.data.local.model.Pokemon
 import com.example.pokedex.data.local.model.PokemonArea
@@ -17,29 +16,15 @@ class PokemonRepository @Inject constructor(
     private val pokemonAPI: PokemonAPI,
     private val pokemonDAO: PokemonDAO
 ) {
+    suspend fun hasPokemon(offset: Int) = pokemonDAO.hasPokemon(offset)
 
-    fun pokemonPaging() = pokemonDAO.fetchPokemonsPaging()
+    fun pokemonListAllPaging() = pokemonDAO.fetchPokemonPaging()
 
-    suspend fun insert(pokemon: List<Pokemon>) = pokemonDAO.insertPokemons(pokemon)
-
-    fun fetchListPokemonLocal(offset: Int = 0, quantity: Int = 10) = liveData {
-        emitSource(pokemonDAO.getAllPokemon())
-
-        val hasPokemon = pokemonDAO.hasPokemon(offset)
-        if (!hasPokemon) {
-            val pokemonList = fetchListOnline(offset, quantity)
-            pokemonDAO.insertPokemons(pokemonList)
-
-            val pokemonWithDetails = fetchPokemonDetails(pokemonList)
-            pokemonDAO.insertPokemons(pokemonWithDetails)
-        }
-    }
+    suspend fun insertPokemonList(pokemon: List<Pokemon>) = pokemonDAO.insertPokemons(pokemon)
 
     fun fetchFavoritePokemonLocal() = liveData {
-        emitSource(pokemonDAO.getAllFavoritePokemon())
+        emitSource(pokemonDAO.fetchAllFavoritePokemon())
     }
-
-    suspend fun hasPokemon(offset: Int) = pokemonDAO.hasPokemon(offset)
 
     suspend fun fetchListOnline(offset: Int, quantity: Int = 10): List<Pokemon> {
         try {
@@ -59,12 +44,16 @@ class PokemonRepository @Inject constructor(
 
     suspend fun fetchPokemonDetails(pokemonList: List<Pokemon>): List<Pokemon> {
         return withContext(Dispatchers.IO) {
-            val mapAsync = pokemonList.map { async { fetchPokemonOnline(it.id) } }
+            val mapAsync = pokemonList.map {
+                async {
+                    fetchPokemonOnline(it.id)
+                }
+            }
             mapAsync.awaitAll().filterNotNull()
         }
     }
 
-    suspend fun fetchPokemonDirect(pokemonId: Long): Pokemon? {
+    suspend fun safeFetchPokemonDirect(pokemonId: Long): Pokemon? {
         return try {
             pokemonDAO.fetchDirectPokemonById(pokemonId)
         } catch (e: Exception) {
@@ -73,15 +62,25 @@ class PokemonRepository @Inject constructor(
         }
     }
 
-    fun fetchPokemonLocal(pokemonId: Long, allDetails: Boolean = false) = liveData {
+    fun fetchPokemonAllDetailsLocal(pokemonId: Long) = liveData {
         emitSource(pokemonDAO.fetchPokemonById(pokemonId))
         withContext(Dispatchers.IO) {
             mutableListOf<Deferred<Any?>>().apply {
-                add(async { fetchPokemonOnline(pokemonId)?.let { pokemonDAO.insertPokemon(it) } })
-                if (allDetails) {
-                    add(async { fetchPokemonOnlineAllDetails(pokemonId) })
-                    add(async { fetchPokemonOnlineEncounterArea(pokemonId) })
-                }
+                add(async {
+                    fetchPokemonOnline(pokemonId)?.let { pokemon ->
+                        pokemonDAO.insertPokemon(pokemon)
+                    }
+                })
+                add(async {
+                    fetchPokemonOnlineAllDetails(pokemonId)?.let { pokemonSpecie ->
+                        pokemonDAO.updatePokemonSpecie(pokemonId, pokemonSpecie)
+                    }
+                })
+                add(async {
+                    fetchPokemonOnlineEncounterArea(pokemonId).let { areas ->
+                        pokemonDAO.updatePokemonArea(pokemonId, areas)
+                    }
+                })
             }.awaitAll()
         }
     }
@@ -146,7 +145,7 @@ class PokemonRepository @Inject constructor(
                 )
                 pokemon
             } else {
-                null
+                directPokemon
             }
         } catch (e: Exception) {
             Log.e("PokemonRepository", e.message ?: "fetchPokemonOnline")
@@ -154,7 +153,7 @@ class PokemonRepository @Inject constructor(
         }
     }
 
-    private suspend fun fetchPokemonOnlineAllDetails(pokemonId: Long) {
+    private suspend fun fetchPokemonOnlineAllDetails(pokemonId: Long): PokemonSpecie? {
         try {
             val directPokemon = pokemonDAO.fetchDirectPokemonById(pokemonId)
             if (directPokemon.pokemonSpecie == null && directPokemon.specie?.url?.isNotEmpty() == true) {
@@ -166,7 +165,7 @@ class PokemonRepository @Inject constructor(
                     ?.map { it.replace("[\n\\f]+".toRegex(), " ") }
                     ?.distinctBy { it }
 
-                val pokemonSpecie = PokemonSpecie(
+                return PokemonSpecie(
                     fetchSpeciePokemonById.baseHappiness,
                     fetchSpeciePokemonById.captureRate,
                     fetchSpeciePokemonById.color?.name,
@@ -178,20 +177,22 @@ class PokemonRepository @Inject constructor(
                     fetchSpeciePokemonById.isMythical,
                     fetchSpeciePokemonById.shape?.name
                 )
-                pokemonDAO.updatePokemonSpecie(pokemonId, pokemonSpecie)
+            } else if (directPokemon.pokemonSpecie != null) {
+                return directPokemon.pokemonSpecie
             }
         } catch (e: Exception) {
             Log.e("PokemonRepository", e.message ?: "fetchPokemonOnlineAllDetails")
         }
+        return null
     }
 
-    private suspend fun fetchPokemonOnlineEncounterArea(pokemonId: Long) {
+    private suspend fun fetchPokemonOnlineEncounterArea(pokemonId: Long): List<PokemonArea> {
         try {
             val directPokemon = pokemonDAO.fetchDirectPokemonById(pokemonId)
             if (directPokemon.locationAreaEncounters != null && directPokemon.pokemonArea.isEmpty()) {
                 val encounterAreaPokemon = pokemonAPI.fetchEncounterAreaPokemonById(pokemonId)
 
-                val areas = encounterAreaPokemon.mapNotNull {
+                return encounterAreaPokemon.mapNotNull {
                     it.locationArea?.name?.let { nameArea ->
                         it.versionDetails
                             ?.firstOrNull()?.encounterDetails?.firstOrNull()
@@ -206,28 +207,21 @@ class PokemonRepository @Inject constructor(
                             }
                     }
                 }
-                pokemonDAO.updatePokemonArea(pokemonId, areas)
             }
         } catch (e: Exception) {
             Log.e("PokemonRepository", e.message ?: "fetchPokemonOnlineEncounterArea")
         }
+        return emptyList()
     }
 
     suspend fun savePokemonInFavorites(pokemonId: Long, isFavorite: Boolean) {
         pokemonDAO.favoritePokemon(pokemonId, isFavorite)
     }
 
-    fun sendPokemonInfo(pokemonId: Long) = liveData<EventSource<Boolean>?> {
-        emit(EventSource.Loading("Looking for Pokemon information"))
-        try {
-            pokemonDAO.fetchDirectPokemonById(pokemonId).apply {
-                emit(EventSource.Loading("Sending information from ${this.name}"))
-                pokemonAPI.sendPokemonInfo(this)
-                emit(EventSource.Ready(true, "Pokemon info sent"))
-            }
-        } catch (e: Exception) {
-            Log.e("PokemonRepository", e.message ?: "fetchPokemonOnlineEncounterArea")
-            emit(EventSource.Error("Error fetching or sending Pokemon information"))
+    suspend fun sendPokemonInfo(pokemonId: Long): Pokemon {
+        pokemonDAO.fetchDirectPokemonById(pokemonId).let { pokemon ->
+            pokemonAPI.sendPokemonInfo(pokemon)
+            return pokemon
         }
     }
 

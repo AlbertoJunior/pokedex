@@ -1,6 +1,5 @@
 package com.example.pokedex.view.pokedex.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -46,7 +45,7 @@ class PokemonPokedexAdapter : ListAdapter<Pokemon, PokemonPokedexAdapter.ViewHol
         }
 
         private fun loadImage(pokemon: Pokemon) {
-            pokemon.getImage().let { url ->
+            pokemon.getImageOfficial().let { url ->
                 if (url.isNotEmpty()) {
                     Utils.loadImageGlide(
                         binding.root.context,
@@ -55,11 +54,9 @@ class PokemonPokedexAdapter : ListAdapter<Pokemon, PokemonPokedexAdapter.ViewHol
                         R.drawable.ic_pokemon_go,
                         listenerOnReady = {
                             binding.progress.visibility = View.GONE
-                            Log.d("PokemonAdapter", "onResourceReady")
                         },
                         listenerOnError = {
                             binding.progress.visibility = View.GONE
-                            Log.e("PokemonAdapter", "onLoadFailed")
                         })
                 } else {
                     binding.ivImage.setImageResource(R.drawable.ic_pokemon_go)

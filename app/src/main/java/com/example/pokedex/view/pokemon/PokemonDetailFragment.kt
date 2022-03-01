@@ -8,6 +8,7 @@ import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Transformations
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
@@ -53,6 +54,7 @@ class PokemonDetailFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentPokemonDetailsBinding.inflate(inflater, container, false)
+        viewModel.setPokemonId(args.pokemonId)
         return binding.root
     }
 
@@ -63,67 +65,90 @@ class PokemonDetailFragment : Fragment() {
         }
 
         binding.containerButtons.isVisible = !args.hideButtons
+        binding.auxPadding.isVisible = !args.hideButtons
 
-        setupListeners()
-        loadPokemon()
         callObservers()
+        loadPokemon()
     }
 
-    private fun callObservers() {
-        viewModelDetails.favoriteEvent.observe(viewLifecycleOwner) { eventSource ->
-            binding.mcLoadContainer.isVisible = eventSource != null
-            binding.progress.isVisible = eventSource is EventSource.Loading
-            binding.ivInfoLoading.isVisible = false
+    private fun defaultLoading(
+        eventSource: EventSource<Boolean>?,
+        idIcon: Int,
+        listenerOnAnimationEnd: () -> Unit
+    ) {
+        binding.mcLoadContainer.isVisible = eventSource != null
+        binding.progress.isVisible = eventSource is EventSource.Loading
+        binding.ivInfoLoading.isVisible = false
 
-            eventSource?.let { event ->
-                binding.tvLoadMessage.text = event.message ?: ""
+        eventSource?.let { event ->
+            binding.tvLoadMessage.text = event.message ?: ""
 
-                if (event !is EventSource.Loading) {
-                    binding.ivInfoLoading.isVisible = true
+            if (event !is EventSource.Loading) {
+                binding.ivInfoLoading.isVisible = true
+                binding.ivInfoLoading.setImageDrawable(
+                    ContextCompat.getDrawable(requireContext(), idIcon)
+                )
 
-                    val icon = when (event) {
-                        is EventSource.Error -> R.drawable.ic_alert_circle
-                        is EventSource.Ready -> if (event.value) R.drawable.ic_pokeball else R.drawable.ic_flee
-                        else -> R.drawable.ic_alert_circle
-                    }
-                    binding.ivInfoLoading.setImageDrawable(
-                        ContextCompat.getDrawable(requireContext(), icon)
-                    )
-
-                    if (event is EventSource.Ready) {
-                        Utils.fade(event.value, binding.ivImageFavorite)
-                    }
-
-                    Utils.fade(
-                        false,
-                        binding.mcLoadContainer, binding.ivInfoLoading,
-                        duration = 800,
-                        delay = 800,
-                        listenerOnAnimationEnd = {
-                            viewModelDetails.clearFavoriteEvent()
-                        })
+                if (event is EventSource.Ready) {
+                    Utils.fade(event.value, binding.ivImageFavorite)
                 }
+
+                Utils.fade(
+                    false,
+                    binding.mcLoadContainer, binding.ivInfoLoading,
+                    duration = 800,
+                    delay = 800,
+                    listenerOnAnimationEnd = listenerOnAnimationEnd
+                )
             }
         }
     }
 
+    private fun callObservers() {
+        viewModelDetails.favoriteEvent.observe(viewLifecycleOwner) { eventSource ->
+            val icon = when (eventSource) {
+                is EventSource.Error -> R.drawable.ic_alert_circle
+                is EventSource.Ready -> if (eventSource.value) R.drawable.ic_pokeball else R.drawable.ic_flee
+                else -> R.drawable.ic_alert_circle
+            }
+            defaultLoading(eventSource, icon) { viewModelDetails.clearFavoriteEvent() }
+        }
+
+        viewModelDetails.sendInfoEvent.observe(viewLifecycleOwner) { eventSource ->
+            val icon = when (eventSource) {
+                is EventSource.Error -> R.drawable.ic_alert_circle
+                is EventSource.Ready -> R.drawable.ic_cloud_upload
+                else -> R.drawable.ic_alert_circle
+            }
+            defaultLoading(eventSource, icon) { viewModelDetails.clearSendEvent() }
+        }
+    }
+
     @SuppressLint("ClickableViewAccessibility")
-    private fun setupListeners() {
+    private fun setupListeners(pokemonId: Long) {
         binding.btCatch.setOnClickListener {
-            viewModelDetails.savePokemonFavorite(args.pokemonId)
+            viewModelDetails.savePokemonFavorite(pokemonId)
+        }
+
+        binding.btFlavor.setOnClickListener {
+//            MaterialAlertDialogBuilder(requireContext())
+//                .setMessage()
+//                .setPositiveButton("Ok", null)
+//                .show()
         }
 
         binding.btHelp.setOnClickListener {
             binding.ivInfoLoading.setImageDrawable(
                 ContextCompat.getDrawable(requireContext(), R.drawable.ic_help)
             )
-            binding.tvLoadMessage.text = "Double tap on image to catch or release this Pokemon"
+            binding.tvLoadMessage.text = getString(R.string.double_tap_message)
             binding.mcLoadContainer.isVisible = true
+            binding.ivInfoLoading.isVisible = true
             Utils.fade(
                 false,
-                binding.mcLoadContainer,
+                binding.mcLoadContainer, binding.ivInfoLoading,
                 duration = 800,
-                delay = 800,
+                delay = 1300,
             )
         }
 
@@ -131,7 +156,7 @@ class PokemonDetailFragment : Fragment() {
             requireContext(),
             object : GestureDetector.SimpleOnGestureListener() {
                 override fun onDoubleTap(p0: MotionEvent?): Boolean {
-                    viewModelDetails.savePokemonFavorite(args.pokemonId)
+                    viewModelDetails.savePokemonFavorite(pokemonId)
                     return true
                 }
             })
@@ -141,37 +166,7 @@ class PokemonDetailFragment : Fragment() {
         }
 
         binding.btSend.setOnClickListener {
-            viewModelDetails.sendPokemonInfo(args.pokemonId)
-                .observe(viewLifecycleOwner) { eventSource ->
-                    binding.mcLoadContainer.isVisible = eventSource != null
-                    binding.progress.isVisible = eventSource is EventSource.Loading
-                    binding.ivInfoLoading.isVisible = false
-
-                    eventSource?.let { event ->
-                        binding.tvLoadMessage.text = event.message ?: ""
-
-                        if (event !is EventSource.Loading) {
-                            binding.ivInfoLoading.isVisible = true
-
-                            val icon = when (event) {
-                                is EventSource.Error -> R.drawable.ic_alert_circle
-                                is EventSource.Ready -> R.drawable.ic_cloud_upload
-                                else -> R.drawable.ic_alert_circle
-                            }
-                            binding.ivInfoLoading.setImageDrawable(
-                                ContextCompat.getDrawable(requireContext(), icon)
-                            )
-
-                            Utils.fade(
-                                false,
-                                binding.mcLoadContainer,
-                                binding.ivInfoLoading,
-                                duration = 800,
-                                delay = 800
-                            )
-                        }
-                    }
-                }
+            viewModelDetails.sendPokemonInfo(pokemonId)
         }
 
         binding.btBack.setOnClickListener {
@@ -183,30 +178,43 @@ class PokemonDetailFragment : Fragment() {
     }
 
     private fun loadPokemon() {
-        viewModelDetails.fetchPokemonUltraDetail(args.pokemonId).observe(viewLifecycleOwner) {
+        binding.progress.isVisible = true
+        binding.progressImage.isVisible = true
+
+        Transformations.switchMap(viewModel.pokemonId) {
+            viewModelDetails.fetchPokemonDetail(it ?: args.pokemonId)
+        }.observe(viewLifecycleOwner) {
+            setupListeners(it.id)
             binding.pokemonDetail = it
 
             binding.ivImageFavorite.isVisible = it.favorite
+
+            Utils.loadImageGlide(
+                requireContext(), it.getImage(), binding.ivImage, R.drawable.ic_pokeball,
+                listenerOnReady = {
+                    binding.progress.isVisible = false
+                    binding.progressImage.isVisible = false
+                },
+                listenerOnError = {
+                    binding.progress.isVisible = false
+                    binding.progressImage.isVisible = false
+                })
 
             mountChipGroup(binding.cgType, it.types)
             mountChipGroup(binding.cgEncounterGroup, it.pokemonArea.map { area -> area.name })
             mountGridGroup(it.pokemonSpecie?.color, it.abilities, binding.rvAbilities)
             mountGridGroup(it.pokemonSpecie?.color, it.moves, binding.rvMoves)
             mountStats(it)
-
-            Utils.loadImageGlide(
-                requireContext(), it.getImage(), binding.ivImage, R.drawable.ic_pokeball,
-                listenerOnReady = {
-                    binding.progress.visibility = View.GONE
-                },
-                listenerOnError = {
-                    binding.progress.visibility = View.GONE
-                })
         }
     }
 
-    private fun mountGridGroup(colorText: String?, list: List<String>?, gridLayout: RecyclerView) {
-        GenericAdapter(colorText).apply {
+    private fun mountGridGroup(
+        colorText: String?,
+        list: List<String>?,
+        gridLayout: RecyclerView,
+        onClick: View.OnClickListener? = null
+    ) {
+        GenericAdapter(colorText, onClick).apply {
             gridLayout.adapter = this
             submitList(list)
         }

@@ -10,122 +10,120 @@
             type="com.example.pokedex.data.local.model.Pokemon" />
     </data>
 
-    <FrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="8dp"
+        android:padding="4dp">
 
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="8dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="8dp"
-            app:cardCornerRadius="64dp"
-            app:cardElevation="4dp">
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_image"
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:layout_marginHorizontal="16dp"
+            android:src="@drawable/ic_pokebal_alpha"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="24dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="@id/iv_image"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/iv_image"
+            app:layout_constraintTop_toTopOf="@id/iv_image">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_name"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="4dp">
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="8dp"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:textColorByText="@{pokemon.pokemonSpecie.color}"
+                tools:text="Charizard" />
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/iv_image"
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_natural_habitat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="8dp"
+                android:layout_marginVertical="2dp"
+                android:text="@{@string/natural_habitat_format(pokemon.pokemonSpecie.getHabitatShow())}"
+                android:textStyle="bold"
+                app:textColorByText="@{pokemon.pokemonSpecie.color}"
+                tools:text="Natural Habitat:" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_shape"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="8dp"
+                android:layout_marginVertical="2dp"
+                android:text="@{@string/shape_format(pokemon.pokemonSpecie.getShapeShow())}"
+                android:textStyle="bold"
+                app:textColorByText="@{pokemon.pokemonSpecie.color}"
+                tools:text="Shape: Upright" />
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="8dp"
+                android:layout_marginVertical="2dp"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_height"
                     android:layout_width="0dp"
-                    android:layout_height="100dp"
-                    android:layout_marginHorizontal="16dp"
-                    android:src="@drawable/ic_pokemon_go"
-                    app:layout_constraintDimensionRatio="1:1"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginEnd="24dp"
-                    android:orientation="vertical"
-                    app:layout_constraintBottom_toBottomOf="@id/iv_image"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/iv_image"
-                    app:layout_constraintTop_toTopOf="@id/iv_image">
-
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/tv_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="8dp"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        app:textColorByText="@{pokemon.pokemonSpecie.color}"
-                        tools:text="Charizard" />
-
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/tv_natural_habitat"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="8dp"
-                        android:layout_marginVertical="2dp"
-                        android:text="@{@string/natural_habitat_format(pokemon.pokemonSpecie.getHabitatShow())}"
-                        android:textStyle="bold"
-                        app:textColorByText="@{pokemon.pokemonSpecie.color}"
-                        tools:text="Natural Habitat:" />
-
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/tv_shape"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="8dp"
-                        android:layout_marginVertical="2dp"
-                        android:text="@{@string/shape_format(pokemon.pokemonSpecie.getShapeShow())}"
-                        android:textStyle="bold"
-                        app:textColorByText="@{pokemon.pokemonSpecie.color}"
-                        tools:text="Shape: Upright" />
-
-                    <androidx.appcompat.widget.LinearLayoutCompat
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="8dp"
-                        android:layout_marginVertical="2dp"
-                        android:orientation="horizontal">
-
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/tv_height"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="4dp"
-                            android:layout_weight="1"
-                            android:text="@{@string/height_format(pokemon.getHeightConverted())}"
-                            android:textStyle="bold"
-                            app:textColorByText="@{pokemon.pokemonSpecie.color}"
-                            tools:text="Height: 0" />
-
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/tv_weight"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="4dp"
-                            android:layout_weight="1"
-                            android:text="@{@string/weight_format(pokemon.getWeightConverted())}"
-                            android:textStyle="bold"
-                            app:textColorByText="@{pokemon.pokemonSpecie.color}"
-                            tools:text="Weight: 0" />
-
-                    </androidx.appcompat.widget.LinearLayoutCompat>
-
-                </androidx.appcompat.widget.LinearLayoutCompat>
-
-                <com.google.android.material.progressindicator.CircularProgressIndicator
-                    android:id="@+id/progress"
-                    style="@style/Widget.Material3.CircularProgressIndicator.Small"
-                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:indeterminate="true"
-                    app:indicatorColor="@color/red_700"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:layout_marginEnd="4dp"
+                    android:layout_weight="1"
+                    android:text="@{@string/height_format(pokemon.getHeightConverted())}"
+                    android:textStyle="bold"
+                    app:textColorByText="@{pokemon.pokemonSpecie.color}"
+                    tools:text="Height: 0" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </com.google.android.material.card.MaterialCardView>
-    </FrameLayout>
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_weight"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_weight="1"
+                    android:text="@{@string/weight_format(pokemon.getWeightConverted())}"
+                    android:textStyle="bold"
+                    app:textColorByText="@{pokemon.pokemonSpecie.color}"
+                    tools:text="Weight: 0" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/progress"
+            style="@style/Widget.Material3.CircularProgressIndicator.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            app:indicatorColor="?colorPrimary"
+            app:layout_constraintBottom_toBottomOf="@id/iv_image"
+            app:layout_constraintEnd_toEndOf="@id/iv_image"
+            app:layout_constraintStart_toStartOf="@id/iv_image"
+            app:layout_constraintTop_toTopOf="@id/iv_image" />
+
+        <View
+            android:id="@+id/first_divider"
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:layout_marginVertical="4dp"
+            android:background="@drawable/divider"
+            android:backgroundTint="?colorPrimary"
+            app:layout_constraintTop_toBottomOf="@id/iv_image" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 </layout>
