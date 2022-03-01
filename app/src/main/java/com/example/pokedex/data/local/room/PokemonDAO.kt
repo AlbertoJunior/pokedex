@@ -1,6 +1,7 @@
 package com.example.pokedex.data.local.room
 
 import androidx.lifecycle.LiveData
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -19,7 +20,10 @@ interface PokemonDAO {
     suspend fun insertPokemons(pokemon: List<Pokemon>)
 
     @Query("SELECT * FROM Pokemon WHERE `offset` = :offset ORDER BY id ASC LIMIT :quantity")
-    fun fetchPokemons(offset: Int = 0, quantity: Int = 20): LiveData<List<Pokemon>>
+    fun fetchPokemons(offset: Int, quantity: Int): LiveData<List<Pokemon>>
+
+    @Query("SELECT * FROM Pokemon ORDER BY id ASC")
+    fun fetchPokemonsPaging(): PagingSource<Int, Pokemon>
 
     @Query("SELECT * FROM Pokemon ORDER BY id ASC LIMIT 100")
     fun getAllPokemon(): LiveData<List<Pokemon>>

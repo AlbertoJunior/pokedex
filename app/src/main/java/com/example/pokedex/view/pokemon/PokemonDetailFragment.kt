@@ -3,7 +3,6 @@ package com.example.pokedex.view.pokemon
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.*
-import android.widget.GridLayout
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
@@ -11,17 +10,17 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.RecyclerView
 import com.example.pokedex.R
 import com.example.pokedex.core.EventSource
 import com.example.pokedex.core.Utils
 import com.example.pokedex.data.local.model.Pokemon
 import com.example.pokedex.databinding.FragmentPokemonDetailsBinding
+import com.example.pokedex.view.pokedex.adapter.GenericAdapter
 import com.example.pokedex.view.pokedex.viewmodel.PokemonViewModel
 import com.example.pokedex.view.pokemon.viewmodel.PokemonDetailViewModel
-import com.google.android.material.button.MaterialButton
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
-import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textview.MaterialTextView
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -115,12 +114,17 @@ class PokemonDetailFragment : Fragment() {
         }
 
         binding.btHelp.setOnClickListener {
-            Snackbar.make(
-                requireContext(),
-                binding.root,
-                "Double tap on image to catch or release this Pokemon",
-                Snackbar.LENGTH_SHORT
-            ).show()
+            binding.ivInfoLoading.setImageDrawable(
+                ContextCompat.getDrawable(requireContext(), R.drawable.ic_help)
+            )
+            binding.tvLoadMessage.text = "Double tap on image to catch or release this Pokemon"
+            binding.mcLoadContainer.isVisible = true
+            Utils.fade(
+                false,
+                binding.mcLoadContainer,
+                duration = 800,
+                delay = 800,
+            )
         }
 
         val gestureDetector = GestureDetector(
@@ -186,8 +190,8 @@ class PokemonDetailFragment : Fragment() {
 
             mountChipGroup(binding.cgType, it.types)
             mountChipGroup(binding.cgEncounterGroup, it.pokemonArea.map { area -> area.name })
-            mountGridGroup(it.abilities, binding.glAbilities)
-            mountGridGroup(it.moves, binding.glMoves)
+            mountGridGroup(it.pokemonSpecie?.color, it.abilities, binding.rvAbilities)
+            mountGridGroup(it.pokemonSpecie?.color, it.moves, binding.rvMoves)
             mountStats(it)
 
             Utils.loadImageGlide(
@@ -201,24 +205,10 @@ class PokemonDetailFragment : Fragment() {
         }
     }
 
-    private fun mountGridGroup(list: List<String>?, gridLayout: GridLayout) {
-        list?.let { abilities ->
-            gridLayout.removeAllViews()
-            gridLayout.isVisible = abilities.isNotEmpty()
-
-            abilities.forEach { move ->
-                val button = MaterialButton(requireContext()).apply {
-                    text = move
-                    layoutParams = GridLayout.LayoutParams(
-                        GridLayout.spec(GridLayout.UNDEFINED, 1f),
-                        GridLayout.spec(GridLayout.UNDEFINED, 1f)
-                    ).apply {
-                        marginStart = 4
-                        marginEnd = 4
-                    }
-                }
-                gridLayout.addView(button)
-            }
+    private fun mountGridGroup(colorText: String?, list: List<String>?, gridLayout: RecyclerView) {
+        GenericAdapter(colorText).apply {
+            gridLayout.adapter = this
+            submitList(list)
         }
     }
 

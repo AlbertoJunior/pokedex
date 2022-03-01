@@ -16,6 +16,12 @@
         <item name="android:textColor">?colorPrimaryDark</item>
     </style>
 
+    <style name="GenericText" parent="Widget.AppCompat.TextView">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/white_700</item>
+    </style>
+
     <style name="PokedexTextTitle" parent="Widget.AppCompat.TextView">
         <item name="android:fontFamily">sans-serif-smallcaps</item>
         <item name="android:textSize">20sp</item>

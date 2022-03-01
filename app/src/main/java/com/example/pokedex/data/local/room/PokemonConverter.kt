@@ -4,24 +4,11 @@ import androidx.room.TypeConverter
 import com.example.pokedex.data.local.model.PokemonArea
 import com.example.pokedex.data.local.model.PokemonSpecie
 import com.example.pokedex.data.local.model.Stat
-import com.example.pokedex.data.remote.model.Ability
 import com.example.pokedex.data.remote.model.NameUrlObject
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
 class PokemonConverter {
-    @TypeConverter
-    fun abilitiesFromString(value: String?): List<Ability>? {
-        if (value == null)
-            return emptyList()
-        return Gson().fromJson(value, object : TypeToken<List<Ability>>() {}.type)
-    }
-
-    @TypeConverter
-    fun abilityToString(value: List<Ability>?): String? {
-        return Gson().toJson(value)
-    }
-
     @TypeConverter
     fun statsFromString(value: String?): List<Stat>? {
         if (value == null)

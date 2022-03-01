@@ -2,8 +2,6 @@ package com.example.pokedex.data
 
 import android.util.Log
 import androidx.lifecycle.liveData
-import androidx.paging.PagingSource
-import androidx.paging.PagingState
 import com.example.pokedex.core.EventSource
 import com.example.pokedex.core.capitalize
 import com.example.pokedex.data.local.model.Pokemon
@@ -20,52 +18,49 @@ class PokemonRepository @Inject constructor(
     private val pokemonDAO: PokemonDAO
 ) {
 
-    fun fetchListPokemonPaging() {
-        object : PagingSource<Int, Pokemon>() {
-            override fun getRefreshKey(state: PagingState<Int, Pokemon>): Int? {
-                TODO("Not yet implemented")
-            }
+    fun pokemonPaging() = pokemonDAO.fetchPokemonsPaging()
 
-            override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Pokemon> {
-                TODO("Not yet implemented")
-            }
-        }
-    }
+    suspend fun insert(pokemon: List<Pokemon>) = pokemonDAO.insertPokemons(pokemon)
 
     fun fetchListPokemonLocal(offset: Int = 0, quantity: Int = 10) = liveData {
         emitSource(pokemonDAO.getAllPokemon())
-        fetchListOnline(offset, quantity)
+
+        val hasPokemon = pokemonDAO.hasPokemon(offset)
+        if (!hasPokemon) {
+            val pokemonList = fetchListOnline(offset, quantity)
+            pokemonDAO.insertPokemons(pokemonList)
+
+            val pokemonWithDetails = fetchPokemonDetails(pokemonList)
+            pokemonDAO.insertPokemons(pokemonWithDetails)
+        }
     }
 
     fun fetchFavoritePokemonLocal() = liveData {
         emitSource(pokemonDAO.getAllFavoritePokemon())
     }
 
-    private suspend fun fetchListOnline(offset: Int, quantity: Int) {
+    suspend fun hasPokemon(offset: Int) = pokemonDAO.hasPokemon(offset)
+
+    suspend fun fetchListOnline(offset: Int, quantity: Int = 10): List<Pokemon> {
         try {
-            val hasPokemon = pokemonDAO.hasPokemon(offset)
-            if (!hasPokemon) {
-                val fetchPokemonList = pokemonAPI.fetchPokemonList(offset, quantity)
-                val pokemonList = fetchPokemonList.results.map {
-                    val id = it.url
-                        .replace(PokemonAPI.BASE_URL, "")
-                        .replace("pokemon", "")
-                        .replace("/", "")
-                    Pokemon(id.toLong(), it.name, offset)
-                }
-                pokemonDAO.insertPokemons(pokemonList)
-                fetchPokemonDetails(pokemonList)
+            val fetchPokemonList = pokemonAPI.fetchPokemonList(offset, quantity)
+            return fetchPokemonList.results.map {
+                val id = it.url
+                    .replace(PokemonAPI.BASE_URL, "")
+                    .replace("pokemon", "")
+                    .replace("/", "")
+                Pokemon(id.toLong(), it.name, offset)
             }
         } catch (e: Exception) {
             Log.e("PokemonRepository", e.message ?: "fetchListOnline")
         }
+        return emptyList()
     }
 
-    private suspend fun fetchPokemonDetails(pokemonList: List<Pokemon>) {
-        withContext(Dispatchers.IO) {
+    suspend fun fetchPokemonDetails(pokemonList: List<Pokemon>): List<Pokemon> {
+        return withContext(Dispatchers.IO) {
             val mapAsync = pokemonList.map { async { fetchPokemonOnline(it.id) } }
-            val awaitAll = mapAsync.awaitAll().filterNotNull()
-            pokemonDAO.insertPokemons(awaitAll)
+            mapAsync.awaitAll().filterNotNull()
         }
     }
 
