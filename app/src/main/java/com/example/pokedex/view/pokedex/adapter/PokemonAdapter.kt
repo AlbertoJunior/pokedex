@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pokedex.R
 import com.example.pokedex.core.Utils
-import com.example.pokedex.core.capitalize
 import com.example.pokedex.core.colorByText
 import com.example.pokedex.data.local.model.Pokemon
 import com.example.pokedex.databinding.ItemPokemonBinding
@@ -49,7 +48,7 @@ class PokemonAdapter(val listener: PokemonAdapterListener) :
 
         private fun setupInfos(pokemon: Pokemon) {
             binding.progress.visibility = View.VISIBLE
-            binding.tvName.text = pokemon.name.capitalize()
+            binding.tvName.text = pokemon.name
             binding.root.setOnClickListener { listener.onPokemonClicked(pokemon) }
             binding.ivImageFavorite.isVisible = pokemon.favorite
             binding.ivImageFavorite.colorByText(pokemon.pokemonSpecie?.color)

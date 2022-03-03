@@ -38,12 +38,14 @@ class PokemonDetailFragment : Fragment() {
         fun newInstance(
             pokemonId: Long,
             hideNav: Boolean = false,
-            hideButtons: Boolean = true
+            hideButtons: Boolean = true,
+            hideBtBack: Boolean = false
         ) = PokemonDetailFragment().apply {
             arguments = bundleOf(
                 "pokemon_id" to pokemonId,
                 "hide_nav" to hideNav,
-                "hide_buttons" to hideButtons
+                "hide_buttons" to hideButtons,
+                "hide_bt_back" to hideBtBack
             )
         }
     }
@@ -66,6 +68,7 @@ class PokemonDetailFragment : Fragment() {
 
         binding.containerButtons.isVisible = !args.hideButtons
         binding.auxPadding.isVisible = !args.hideButtons
+        binding.btBack.isVisible = !args.hideBtBack
 
         callObservers()
         loadPokemon()

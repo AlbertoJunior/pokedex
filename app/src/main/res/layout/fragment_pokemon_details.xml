@@ -37,7 +37,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-smallcaps"
-                    android:text="@{pokemonDetail.nameShow}"
+                    android:text="@{pokemonDetail.name}"
                     android:textAlignment="center"
                     android:textSize="24sp"
                     android:textStyle="bold"
@@ -207,6 +207,15 @@
                         android:layout_marginVertical="4dp"
                         android:orientation="vertical"
                         android:paddingBottom="24dp">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tv_id"
+                            style="@style/PokedexTextDetail"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginVertical="4dp"
+                            android:text="@{@string/id_format(pokemonDetail.id)}"
+                            tools:text="ID: 756" />
 
                         <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/tv_habitat"
