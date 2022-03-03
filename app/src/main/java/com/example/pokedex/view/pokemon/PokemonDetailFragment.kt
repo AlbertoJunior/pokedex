@@ -203,8 +203,8 @@ class PokemonDetailFragment : Fragment() {
                     binding.progressImage.isVisible = false
                 })
 
-            mountChipGroup(binding.cgType, it.types)
             mountChipGroup(binding.cgEncounterGroup, it.pokemonArea.map { area -> area.name })
+            mountGridGroup(it.pokemonSpecie?.color, it.types, binding.rvTypes)
             mountGridGroup(it.pokemonSpecie?.color, it.abilities, binding.rvAbilities)
             mountGridGroup(it.pokemonSpecie?.color, it.moves, binding.rvMoves)
             mountStats(it)

@@ -29,7 +29,17 @@ Creating a Pokedex App to study.
 
 ![Screen: List all](imgs/list_all.png)
 
+![Screen: List all view pokemon](imgs/list_all_view.png)
+
+![Screen: List all favorite Pokemon](imgs/list_all_favorite.png)
+
+![Screen: Details](imgs/details.png)
+
 ![Screen: My Pokedex](imgs/my_pokedex.png)
+
+![Screen: Send loading](imgs/send_loading.png)
+
+![Screen: Send finish](imgs/send_finish.png)
 
 ![Screen: Search Pikachu.png](imgs/search_pikachu.png)
 
@@ -52,5 +62,4 @@ Creating a Pokedex App to study.
 * [OkHttp](https://square.github.io/okhttp/)
 * [Glide](https://bumptech.github.io/glide/)
 * [Lottie](https://airbnb.io/lottie/#/android)
-*
-    - [Man Walking Animation](https://lottiefiles.com/79727-man-walking)
+- - [Man Walking Animation](https://lottiefiles.com/79727-man-walking)
