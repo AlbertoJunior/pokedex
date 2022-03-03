@@ -37,6 +37,27 @@ fun View.colorByText(value: String?) {
     }
 }
 
+@BindingAdapter("colorByTextContrast")
+fun View.colorByTextContrast(value: String?) {
+    when (value) {
+        "black", "white" -> R.color.gray_200
+        else -> null
+    }?.let {
+        val color = ContextCompat.getColor(context, it)
+        when (this) {
+            is ImageView -> {
+                imageTintList = ColorStateList.valueOf(color)
+            }
+            is CircularProgressIndicator -> {
+                setIndicatorColor(color)
+            }
+            else -> {
+                setBackgroundColor(color)
+            }
+        }
+    }
+}
+
 fun getColor(value: String?): Int {
     val color = when (value) {
         "yellow" -> R.color.yellow_200
