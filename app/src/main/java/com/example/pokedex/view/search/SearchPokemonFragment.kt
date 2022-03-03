@@ -1,12 +1,15 @@
 package com.example.pokedex.view.search
 
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.example.pokedex.R
+import com.example.pokedex.core.EventSource
 import com.example.pokedex.databinding.FragmentSearchPokemonBinding
 import com.example.pokedex.view.pokemon.PokemonDetailFragment
 import com.example.pokedex.view.search.viewmodel.PokemonSearchViewModel
@@ -32,16 +35,41 @@ class SearchPokemonFragment : Fragment() {
 
     private fun setupListeners() {
         binding.txSearch.setEndIconOnClickListener {
+            binding.progress.isVisible = true
             viewModel.setPokemonId(binding.etSearch.text?.toString())
+        }
+
+        binding.etSearch.setOnKeyListener { _, code, keyEvent ->
+            if (KeyEvent.ACTION_DOWN == keyEvent.action && KeyEvent.KEYCODE_ENTER == code) {
+                binding.progress.isVisible = true
+                viewModel.setPokemonId(binding.etSearch.text?.toString())
+            }
+            false
         }
     }
 
     private fun callObservers() {
-        viewModel.pokemon.observe(viewLifecycleOwner) { pokemon ->
-            viewModel.setPokemonId(null)
+        viewModel.pokemon.observe(viewLifecycleOwner) { eventSource ->
+            binding.progress.isVisible = eventSource != null && eventSource is EventSource.Loading
+            binding.fragmentContainer.isVisible =
+                eventSource != null && eventSource is EventSource.Ready
+            binding.tvMessage.isVisible = eventSource != null && eventSource !is EventSource.Ready
 
-            if (pokemon != null)
-                replaceFragment(pokemon.id)
+            when (eventSource) {
+                is EventSource.Error -> {
+                    viewModel.setPokemonId(null)
+                    binding.tvMessage.text = getString(R.string.search_pokemon_not_found)
+                }
+                is EventSource.Loading -> {
+                    binding.tvMessage.text = eventSource.message
+                }
+                is EventSource.Ready -> {
+                    eventSource.value?.id?.let { pokemonId ->
+                        replaceFragment(pokemonId)
+                    }
+                    viewModel.setPokemonId(null)
+                }
+            }
         }
     }
 
@@ -49,7 +77,10 @@ class SearchPokemonFragment : Fragment() {
         childFragmentManager
             .beginTransaction()
             .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
-            .replace(R.id.fragment_container, PokemonDetailFragment.newInstance(pokemonId))
+            .replace(
+                R.id.fragment_container,
+                PokemonDetailFragment.newInstance(pokemonId, hideBtBack = true)
+            )
             .commit()
     }
 }

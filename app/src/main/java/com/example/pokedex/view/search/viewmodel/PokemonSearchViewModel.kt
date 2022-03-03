@@ -1,10 +1,9 @@
 package com.example.pokedex.view.search.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
+import com.example.pokedex.core.EventSource
 import com.example.pokedex.data.PokemonRepository
+import com.example.pokedex.data.local.model.Pokemon
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -16,15 +15,15 @@ class PokemonSearchViewModel @Inject constructor(
     private val _pokemonId = MutableLiveData<String?>(null)
     private val pokemonId: LiveData<String?> = _pokemonId
 
-    val pokemon = Transformations.switchMap(pokemonId) { value ->
+    val pokemon: LiveData<EventSource<Pokemon?>> = Transformations.switchMap(pokemonId) { value ->
         if (value == null)
-            return@switchMap null
+            return@switchMap liveData { EventSource.Ready<Pokemon?>(null) }
 
         try {
-            pokemonRepository.fetchPokemonAllDetailsLocal(value.toLong())
-        } catch (e: Exception) {
+            pokemonRepository.searchPokemonByIdAllDetailsLocal(value.toLong())
+        } catch (e: NumberFormatException) {
             val preparedName = value.lowercase().replace(" ", "-")
-            pokemonRepository.fetchPokemonByNameAllDetailsLocal(preparedName)
+            pokemonRepository.searchPokemonByNameAllDetailsLocal(preparedName)
         }
     }
 

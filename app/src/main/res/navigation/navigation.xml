@@ -52,6 +52,11 @@
             android:name="hide_buttons"
             android:defaultValue="false"
             app:argType="boolean" />
+
+        <argument
+            android:name="hide_bt_back"
+            android:defaultValue="false"
+            app:argType="boolean" />
     </fragment>
 
     <fragment

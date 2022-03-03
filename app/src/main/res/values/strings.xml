@@ -29,8 +29,13 @@
     <string name="mythical">Mythical</string>
     <string name="legendary">Legendary</string>
     <string name="natural_habitat">Natural Habitat:</string>
+    <string name="id_format">ID: %1$d</string>
+    <string name="id_name_format">ID: %1$d - %2$s</string>
     <string name="natural_habitat_format">Natural Habitat: %1$s</string>
     <string name="shape_format">Shape: %1$s</string>
     <string name="my_pokemons">My Pokemons!</string>
     <string name="double_tap_message">Double tap on image to catch or release this Pokemon</string>
+    <string name="search_pokemon_by_name_or_id">Search Pokemon by Name or ID</string>
+    <string name="search_pokemon_not_found">Not found Pokemon. Try another Name or ID</string>
+    <string name="search_pokemon">Search Pokemon</string>
 </resources>

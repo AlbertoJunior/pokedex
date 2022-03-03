@@ -40,6 +40,9 @@ interface PokemonDAO {
     @Query("SELECT * FROM Pokemon WHERE id =:id")
     suspend fun fetchDirectPokemonById(id: Long): Pokemon
 
+    @Query("SELECT * FROM Pokemon WHERE id =:id")
+    suspend fun fetchDirectPokemonByIdNullable(id: Long): Pokemon?
+
     @Query("SELECT * FROM Pokemon WHERE name =:name")
     suspend fun fetchDirectPokemonByName(name: String): Pokemon?
 
