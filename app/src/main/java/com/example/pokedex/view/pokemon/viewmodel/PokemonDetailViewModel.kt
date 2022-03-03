@@ -25,7 +25,6 @@ class PokemonDetailViewModel @Inject constructor(private val repository: Pokemon
 
     fun fetchPokemonDetail(id: Long) = repository.fetchPokemonAllDetailsLocal(id)
 
-
     fun savePokemonFavorite(pokemonId: Long) {
         viewModelScope.launch {
             _favoriteEvent.value = EventSource.Loading("Trying catch")

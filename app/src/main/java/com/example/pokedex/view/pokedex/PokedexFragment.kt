@@ -35,7 +35,8 @@ class PokedexFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        replaceFragment(LottieFragment.newInstance())
+        if (savedInstanceState == null)
+            replaceFragment(LottieFragment.newInstance())
         setupAdapter()
     }
 

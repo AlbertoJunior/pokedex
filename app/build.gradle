@@ -10,11 +10,13 @@ android {
     compileSdk 31
 
     defaultConfig {
+        def commitCount = Integer.parseInt('git rev-list --count HEAD'.execute([], project.rootDir).text.trim())
+
         applicationId "com.example.pokedex"
         minSdk 23
         targetSdk 31
-        versionCode 1
-        versionName "1.0"
+        versionCode commitCount
+        versionName "1.$commitCount"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
