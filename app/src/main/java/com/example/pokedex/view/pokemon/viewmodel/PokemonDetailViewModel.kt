@@ -62,6 +62,8 @@ class PokemonDetailViewModel @Inject constructor(private val repository: Pokemon
                     EventSource.Error("Oh no! You probably lost the pokeball")
             } catch (e: HttpException) {
                 _sendInfoEvent.value = EventSource.Error("Failed to send Pokemon information")
+            } catch (e: Exception) {
+                _sendInfoEvent.value = EventSource.Error(e.message)
             }
         }
     }
