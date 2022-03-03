@@ -8,6 +8,7 @@ import com.example.pokedex.data.local.model.PokemonArea
 import com.example.pokedex.data.local.model.PokemonSpecie
 import com.example.pokedex.data.local.model.Stat
 import com.example.pokedex.data.local.room.PokemonDAO
+import com.example.pokedex.data.remote.ConverterRemote
 import com.example.pokedex.data.remote.PokemonAPI
 import kotlinx.coroutines.*
 import javax.inject.Inject
@@ -34,7 +35,8 @@ class PokemonRepository @Inject constructor(
                     .replace(PokemonAPI.BASE_URL, "")
                     .replace("pokemon", "")
                     .replace("/", "")
-                Pokemon(id.toLong(), it.name, offset)
+                val name = it.name.replace("-", " ").capitalize()
+                Pokemon(id.toLong(), name, offset)
             }
         } catch (e: Exception) {
             Log.e("PokemonRepository", e.message ?: "fetchListOnline")
@@ -46,7 +48,10 @@ class PokemonRepository @Inject constructor(
         return withContext(Dispatchers.IO) {
             val mapAsync = pokemonList.map {
                 async {
-                    fetchPokemonOnline(it.id)
+                    fetchPokemonOnline(it.id)?.let { pokemon ->
+                        pokemonDAO.insertPokemon(pokemon)
+                        pokemon
+                    }
                 }
             }
             mapAsync.awaitAll().filterNotNull()
@@ -59,6 +64,48 @@ class PokemonRepository @Inject constructor(
         } catch (e: Exception) {
             Log.e("PokemonRepository", e.message ?: "fetchPokemonDirect")
             null
+        }
+    }
+
+    fun fetchPokemonByNameAllDetailsLocal(pokemonName: String) = liveData {
+        withContext(Dispatchers.IO) {
+            val pokemon = pokemonDAO.fetchDirectPokemonByName(pokemonName)
+            if (pokemon == null) {
+                try {
+                    val fetchPokemonByName = pokemonAPI.fetchPokemonByName(pokemonName)
+
+                    val listSprites = ConverterRemote.sprites(fetchPokemonByName)
+                    val abilities = ConverterRemote.abilities(fetchPokemonByName)
+                    val moves = ConverterRemote.moves(fetchPokemonByName)
+                    val stats = ConverterRemote.stats(fetchPokemonByName)
+                    val types = ConverterRemote.types(fetchPokemonByName)
+                    val auxId = fetchPokemonByName.id ?: throw Exception("error")
+                    val offs = (auxId - (auxId % 10) - 10).toInt()
+
+                    val newPokemon = Pokemon(
+                        auxId,
+                        fetchPokemonByName.name ?: throw Exception("error"),
+                        offs,
+                        abilities,
+                        moves,
+                        fetchPokemonByName.height,
+                        fetchPokemonByName.locationAreaEncounters,
+                        fetchPokemonByName.baseExperience,
+                        fetchPokemonByName.species,
+                        stats,
+                        listSprites,
+                        types,
+                        fetchPokemonByName.weight
+                    )
+
+                    pokemonDAO.insertPokemon(newPokemon)
+                    emitSource(fetchPokemonAllDetailsLocal(fetchPokemonByName.id))
+                } catch (e: Exception) {
+                    Log.e("PokemonRepository", e.message ?: "fetchPokemonOnline")
+                }
+            } else {
+                emitSource(fetchPokemonAllDetailsLocal(pokemon.id))
+            }
         }
     }
 
@@ -105,28 +152,34 @@ class PokemonRepository @Inject constructor(
                     }
                 }
 
-                val stats = fetchPokemonById.stats.mapNotNull {
-                    if (it.stat?.name != null) {
-                        val name = it.stat.name.replace("-", " ").capitalize()
-                        Stat(name, it.baseStat ?: 0L, it.effort ?: 0L)
-                    } else {
-                        null
+                val stats = fetchPokemonById.stats
+                    .mapNotNull {
+                        if (it.stat?.name != null) {
+                            val name = it.stat.name.replace("-", " ").capitalize()
+                            Stat(name, it.baseStat ?: 0L, it.effort ?: 0L)
+                        } else {
+                            null
+                        }
                     }
-                }
 
-                val types = fetchPokemonById.types.mapNotNull { it.type?.name }.distinct()
+                val types = fetchPokemonById.types
+                    .mapNotNull { it.type?.name }
+                    .distinct()
+                    .sorted()
 
                 val moves = fetchPokemonById.moves
                     .mapNotNull {
                         it.move?.name?.replace("-", " ")?.capitalize()
                     }
                     .distinct()
+                    .sorted()
 
                 val abilities = fetchPokemonById.abilities
                     .mapNotNull {
                         it.ability?.name?.replace("-", " ")?.capitalize()
                     }
                     .distinct()
+                    .sorted()
 
                 val pokemon = Pokemon(
                     pokemonId,

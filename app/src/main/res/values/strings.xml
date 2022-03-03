@@ -3,6 +3,7 @@
     <string name="title_grass">Grass</string>
     <string name="title_my_pokedex">My Pokemons</string>
     <string name="title_pokemon_details">Pokemon Details</string>
+    <string name="title_pokemon_search">Search Pokemon</string>
     <string name="enter_in_grass">Enter in grass</string>
 
     <string name="name_format">Name: %1$s</string>

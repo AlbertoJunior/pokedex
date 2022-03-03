@@ -34,8 +34,14 @@ interface PokemonDAO {
     @Query("SELECT * FROM Pokemon WHERE id =:id")
     fun fetchPokemonById(id: Long): LiveData<Pokemon>
 
+    @Query("SELECT * FROM Pokemon WHERE name =:name")
+    fun fetchPokemonByName(name: String): LiveData<Pokemon>
+
     @Query("SELECT * FROM Pokemon WHERE id =:id")
     suspend fun fetchDirectPokemonById(id: Long): Pokemon
+
+    @Query("SELECT * FROM Pokemon WHERE name =:name")
+    suspend fun fetchDirectPokemonByName(name: String): Pokemon?
 
     @Query("SELECT COUNT(id) FROM Pokemon WHERE `offset` = :offset LIMIT 1")
     suspend fun hasPokemon(offset: Int): Boolean
