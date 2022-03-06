@@ -15,30 +15,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/my_pokemons"
-            app:layout_constraintBottom_toTopOf="@id/ns_pokemon_list"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/ns_pokemon_list"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_pokemon_list"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="8dp"
+            android:clipToPadding="false"
+            android:orientation="vertical"
+            android:padding="8dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_message">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_pokemon_list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:itemCount="4"
-                tools:listitem="@layout/item_pokemon_pokedex" />
-        </androidx.core.widget.NestedScrollView>
+            app:layout_constraintTop_toBottomOf="@id/tv_message"
+            tools:itemCount="4"
+            tools:listitem="@layout/item_pokemon_pokedex" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

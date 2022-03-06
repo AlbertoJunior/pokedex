@@ -6,7 +6,6 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/black_a20"
         tools:context=".view.pokedex.PokedexFragment">
 
         <com.google.android.material.textview.MaterialTextView
@@ -21,10 +20,10 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tx_search"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="4dp"
-            android:layout_marginVertical="16dp"
+            android:layout_margin="16dp"
             android:hint="@string/search_pokemon_by_name_or_id"
             app:endIconDrawable="@drawable/ic_grass"
             app:endIconMode="clear_text"
@@ -51,35 +50,43 @@
             android:layout_marginVertical="4dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tx_search" />
+            app:layout_constraintTop_toBottomOf="@id/tx_search"
+            app:layout_constraintVertical_bias="0.0" />
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/tv_message"
-            style="@style/PokedexTextTitle"
-            android:layout_width="wrap_content"
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="@id/progress"
+            android:gravity="center"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tx_search"
-            tools:text="Hunting Pokemons in the High Grass"
-            tools:visibility="visible" />
+            app:layout_constraintTop_toTopOf="@id/fragment_container">
 
-        <com.google.android.material.progressindicator.CircularProgressIndicator
-            android:id="@+id/progress"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            app:indicatorColor="?colorPrimary"
-            app:layout_constraintBottom_toBottomOf="@id/fragment_container"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tx_search"
-            tools:progress="48"
-            tools:visibility="visible" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tv_message"
+                style="@style/PokedexTextTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:visibility="gone"
+                tools:text="Hunting Pokemons in the High Grass"
+                tools:visibility="visible" />
+
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:id="@+id/progress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:visibility="gone"
+                app:indicatorColor="?colorPrimary"
+                tools:progress="48"
+                tools:visibility="visible" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

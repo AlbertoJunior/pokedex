@@ -10,6 +10,7 @@
         android:name="com.example.pokedex.view.pokedex.PokedexFragment"
         android:label="@string/title_grass"
         tools:layout="@layout/fragment_list_all">
+
         <action
             android:id="@+id/action_navigation_list_all_to_navigation_pokemon_details"
             app:destination="@id/navigation_pokemon_details"
@@ -38,6 +39,7 @@
         android:name="com.example.pokedex.view.pokemon.PokemonDetailFragment"
         android:label="@string/title_pokemon_details"
         tools:layout="@layout/fragment_pokemon_details">
+
         <argument
             android:name="pokemon_id"
             android:defaultValue="0L"
@@ -57,6 +59,14 @@
             android:name="hide_bt_back"
             android:defaultValue="false"
             app:argType="boolean" />
+
+        <action
+            android:id="@+id/action_navigation_pokemon_details_to_show_pokemon_flavor_text"
+            app:destination="@id/show_pokemon_flavor_text"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
     </fragment>
 
     <fragment
@@ -72,5 +82,17 @@
             app:exitAnim="@anim/fade_out"
             app:popEnterAnim="@anim/fade_in"
             app:popExitAnim="@anim/fade_out" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/show_pokemon_flavor_text"
+        android:name="com.example.pokedex.view.dialog.PokemonFlavorTextDialog"
+        android:label="@string/title_pokemon_flavor_text"
+        tools:layout="@layout/dialog_pokemon_flavor_text">
+
+        <argument
+            android:name="pokemon_id"
+            android:defaultValue="0L"
+            app:argType="long" />
     </fragment>
 </navigation>

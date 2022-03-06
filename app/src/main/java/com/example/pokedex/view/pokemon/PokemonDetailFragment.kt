@@ -15,14 +15,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.pokedex.R
 import com.example.pokedex.core.EventSource
 import com.example.pokedex.core.Utils
-import com.example.pokedex.data.local.model.Pokemon
+import com.example.pokedex.data.local.model.Stat
 import com.example.pokedex.databinding.FragmentPokemonDetailsBinding
-import com.example.pokedex.view.pokedex.adapter.GenericAdapter
+import com.example.pokedex.view.dialog.PokemonFlavorTextDialog
+import com.example.pokedex.view.dialog.listeners.GenericAdapterClickListener
 import com.example.pokedex.view.pokedex.viewmodel.PokemonViewModel
+import com.example.pokedex.view.pokemon.adapter.GenericAdapter
+import com.example.pokedex.view.pokemon.adapter.GenericTextAdapter
 import com.example.pokedex.view.pokemon.viewmodel.PokemonDetailViewModel
-import com.google.android.material.chip.Chip
-import com.google.android.material.chip.ChipGroup
-import com.google.android.material.textview.MaterialTextView
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -134,10 +134,8 @@ class PokemonDetailFragment : Fragment() {
         }
 
         binding.btFlavor.setOnClickListener {
-//            MaterialAlertDialogBuilder(requireContext())
-//                .setMessage()
-//                .setPositiveButton("Ok", null)
-//                .show()
+            PokemonFlavorTextDialog.newInstance(pokemonId)
+                .show(childFragmentManager, "show_pokemon_flavor_text")
         }
 
         binding.btHelp.setOnClickListener {
@@ -203,11 +201,16 @@ class PokemonDetailFragment : Fragment() {
                     binding.progressImage.isVisible = false
                 })
 
-            mountChipGroup(binding.cgEncounterGroup, it.pokemonArea.map { area -> area.name })
-            mountGridGroup(it.pokemonSpecie?.color, it.types, binding.rvTypes)
-            mountGridGroup(it.pokemonSpecie?.color, it.abilities, binding.rvAbilities)
-            mountGridGroup(it.pokemonSpecie?.color, it.moves, binding.rvMoves)
-            mountStats(it)
+            val pokemonColor = it.pokemonSpecie?.color
+            mountGridGroup(
+                pokemonColor,
+                it.pokemonArea.map { area -> area.name },
+                binding.rvEncounterGroup
+            )
+            mountGridGroup(pokemonColor, it.types, binding.rvTypes)
+            mountGridGroup(pokemonColor, it.abilities, binding.rvAbilities)
+            mountGridGroup(pokemonColor, it.moves, binding.rvMoves)
+            mountStats(pokemonColor, it.stats)
         }
     }
 
@@ -215,7 +218,7 @@ class PokemonDetailFragment : Fragment() {
         colorText: String?,
         list: List<String>?,
         gridLayout: RecyclerView,
-        onClick: View.OnClickListener? = null
+        onClick: GenericAdapterClickListener? = null
     ) {
         GenericAdapter(colorText, onClick).apply {
             gridLayout.adapter = this
@@ -223,40 +226,14 @@ class PokemonDetailFragment : Fragment() {
         }
     }
 
-    private fun mountStats(pokemon: Pokemon) {
-        pokemon.stats?.let { stats ->
-            binding.llStatsGroup.removeAllViews()
-            binding.llStatsGroup.isVisible = stats.isNotEmpty()
+    private fun mountStats(color: String?, stats: List<Stat>?) {
+        binding.rvStats.isVisible = stats?.isNotEmpty() == true
 
-            stats.forEach {
-                val textView = MaterialTextView(requireContext()).apply {
-                    layoutParams = ViewGroup.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT
-                    )
-                    textSize = 14F
-
-                    val statsName = it.name
-                    text = getString(R.string.stat_format, statsName, it.base.toString())
-                }
-                binding.llStatsGroup.addView(textView)
-            }
+        val map = stats?.map { stat ->
+            getString(R.string.stat_format, stat.name, stat.base)
         }
-    }
-
-    private fun mountChipGroup(group: ChipGroup, listName: List<String>) {
-        group.removeAllViews()
-        group.isVisible = listName.isNotEmpty()
-        listName.forEach { type ->
-            group.addView(createChipItem(type))
-        }
-    }
-
-    private fun createChipItem(textValue: String): Chip {
-        return Chip(requireContext()).apply {
-            text = textValue
-            chipEndPadding = 8F
-            chipStartPadding = 8F
+        binding.rvStats.adapter = GenericTextAdapter(color).apply {
+            submitList(map)
         }
     }
 

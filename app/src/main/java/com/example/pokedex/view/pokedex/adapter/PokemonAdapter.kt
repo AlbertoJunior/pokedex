@@ -14,7 +14,7 @@ import com.example.pokedex.data.local.model.Pokemon
 import com.example.pokedex.databinding.ItemPokemonBinding
 import com.example.pokedex.view.pokedex.listeners.PokemonAdapterListener
 
-class PokemonAdapter(val listener: PokemonAdapterListener) :
+class PokemonAdapter(private val listener: PokemonAdapterListener) :
     PagingDataAdapter<Pokemon, PokemonAdapter.ViewHolder>(DiffCallback) {
 
     private object DiffCallback : DiffUtil.ItemCallback<Pokemon>() {
