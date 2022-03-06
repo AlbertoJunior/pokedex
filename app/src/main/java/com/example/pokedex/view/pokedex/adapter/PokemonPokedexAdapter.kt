@@ -8,13 +8,13 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pokedex.R
 import com.example.pokedex.core.Utils
-import com.example.pokedex.core.capitalize
 import com.example.pokedex.data.local.model.Pokemon
 import com.example.pokedex.databinding.ItemPokemonPokedexBinding
 import com.example.pokedex.view.pokedex.listeners.PokemonAdapterListener
 
-class PokemonPokedexAdapter : ListAdapter<Pokemon, PokemonPokedexAdapter.ViewHolder>(DiffCallback) {
-    lateinit var listener: PokemonAdapterListener
+class PokemonPokedexAdapter(
+    private val listener: PokemonAdapterListener
+) : ListAdapter<Pokemon, PokemonPokedexAdapter.ViewHolder>(DiffCallback) {
 
     private object DiffCallback : DiffUtil.ItemCallback<Pokemon>() {
         override fun areItemsTheSame(oldItem: Pokemon, newItem: Pokemon) = oldItem.id == newItem.id
@@ -39,7 +39,7 @@ class PokemonPokedexAdapter : ListAdapter<Pokemon, PokemonPokedexAdapter.ViewHol
         fun bind(pokemon: Pokemon) {
             binding.pokemon = pokemon
             binding.progress.visibility = View.VISIBLE
-            binding.tvName.text = pokemon.name.capitalize()
+            binding.tvName.text = pokemon.name
             binding.root.setOnClickListener { listener.onPokemonClicked(pokemon) }
             loadImage(pokemon)
         }

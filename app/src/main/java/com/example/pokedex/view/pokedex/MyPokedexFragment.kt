@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -36,32 +37,28 @@ class MyPokedexFragment : Fragment() {
     }
 
     private fun setupAdapter() {
-        val pokemonAdapter = PokemonPokedexAdapter().apply {
-            listener = object : PokemonAdapterListener {
-                override fun onPokemonClicked(pokemon: Pokemon) {
-                    navController.navigate(
-                        MyPokedexFragmentDirections.actionNavigationMyPokemonsToNavigationPokemonDetails(
-                            pokemon.id
-                        )
+        val listener = object : PokemonAdapterListener {
+            override fun onPokemonClicked(pokemon: Pokemon) {
+                navController.navigate(
+                    MyPokedexFragmentDirections.actionNavigationMyPokemonsToNavigationPokemonDetails(
+                        pokemon.id
                     )
-                }
+                )
             }
         }
+        val pokemonAdapter = PokemonPokedexAdapter(listener)
 
         binding.rvPokemonList.adapter = pokemonAdapter
 
         viewModel.fetchFavoritePokemonList().observe(viewLifecycleOwner) {
+            binding.rvPokemonList.isVisible = it is EventSource.Ready
+
             when (it) {
                 is EventSource.Error -> {
-                    binding.nsPokemonList.visibility = View.GONE
                     binding.tvMessage.text = it.message
                 }
-                is EventSource.Loading -> {
-                    binding.nsPokemonList.visibility = View.GONE
-                }
+                is EventSource.Loading -> {}
                 is EventSource.Ready -> {
-                    binding.nsPokemonList.visibility = View.VISIBLE
-
                     if (it.message?.isNotEmpty() == true) {
                         binding.tvMessage.visibility = View.VISIBLE
                         binding.tvMessage.text = it.message

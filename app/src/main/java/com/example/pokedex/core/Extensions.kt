@@ -1,13 +1,16 @@
 package com.example.pokedex.core
 
 import android.content.res.ColorStateList
+import android.os.Build
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.databinding.BindingAdapter
 import com.example.pokedex.R
+import com.google.android.material.divider.MaterialDivider
 import com.google.android.material.progressindicator.CircularProgressIndicator
 
 fun String.capitalize(): String {
@@ -22,38 +25,34 @@ fun View.visibilityByBoolean(value: Boolean?) {
 
 @BindingAdapter("colorByText")
 fun View.colorByText(value: String?) {
-    val color = getColor(value)
-
+    val color = ContextCompat.getColor(context, getColor(value))
     when (this) {
-        is ImageView -> {
-            imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, color))
-        }
-        is CircularProgressIndicator -> {
-            setIndicatorColor(ContextCompat.getColor(context, color))
-        }
-        else -> {
-            background.setTint(ContextCompat.getColor(context, color))
-        }
+        is ImageView -> imageTintList = ColorStateList.valueOf(color)
+        is CircularProgressIndicator -> setIndicatorColor(color)
+        is MaterialDivider -> dividerColor = color
+        is TextView -> setTextColor(ColorStateList.valueOf(color))
+        else -> background.setTint(color)
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.R)
 @BindingAdapter("colorByTextContrast")
 fun View.colorByTextContrast(value: String?) {
     when (value) {
-        "black", "white" -> R.color.gray_200
-        else -> null
-    }?.let {
+        "black", "white" -> R.color.gray_700
+        else -> {
+            if (resources.configuration.isNightModeActive)
+                androidx.appcompat.R.color.background_floating_material_dark
+            else
+                androidx.appcompat.R.color.background_floating_material_light
+        }
+    }.let {
         val color = ContextCompat.getColor(context, it)
+
         when (this) {
-            is ImageView -> {
-                imageTintList = ColorStateList.valueOf(color)
-            }
-            is CircularProgressIndicator -> {
-                setIndicatorColor(color)
-            }
-            else -> {
-                setBackgroundColor(color)
-            }
+            is ImageView -> imageTintList = ColorStateList.valueOf(color)
+            is CircularProgressIndicator -> setIndicatorColor(color)
+            else -> setBackgroundColor(color)
         }
     }
 }

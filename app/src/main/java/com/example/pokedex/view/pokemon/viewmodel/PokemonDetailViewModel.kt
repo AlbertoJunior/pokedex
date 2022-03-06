@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pokedex.core.EventSource
-import com.example.pokedex.core.capitalize
 import com.example.pokedex.data.PokemonRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -35,9 +34,9 @@ class PokemonDetailViewModel @Inject constructor(private val repository: Pokemon
                 repository.savePokemonInFavorites(pokemonId, swapFavoriteStatus)
 
                 val message = if (swapFavoriteStatus)
-                    "Gotcha! ${fetchPokemonDirect.name.capitalize()} was caught!"
+                    "Gotcha! ${fetchPokemonDirect.name} was caught!"
                 else
-                    "You released ${fetchPokemonDirect.name.capitalize()}"
+                    "You released ${fetchPokemonDirect.name}"
 
                 _favoriteEvent.value = EventSource.Ready(swapFavoriteStatus, message)
             } else {
@@ -56,7 +55,7 @@ class PokemonDetailViewModel @Inject constructor(private val repository: Pokemon
             try {
                 val pokemon = repository.sendPokemonInfo(pokemonId)
                 _sendInfoEvent.value =
-                    EventSource.Ready(true, "Pokemon ${pokemon.name.capitalize()} info sent")
+                    EventSource.Ready(true, "Pokemon ${pokemon.name} info sent")
             } catch (e: SQLException) {
                 _sendInfoEvent.value =
                     EventSource.Error("Oh no! You probably lost the pokeball")

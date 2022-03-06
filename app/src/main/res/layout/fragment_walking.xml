@@ -25,7 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:text="Hunting Pokemons in the High Grass"
+            android:text="@string/hunting_pokemons_in_the_high_grass"
             app:layout_constraintBottom_toTopOf="@id/animationView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
