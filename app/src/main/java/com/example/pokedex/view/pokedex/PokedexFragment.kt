@@ -8,6 +8,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
 import com.example.pokedex.R
 import com.example.pokedex.data.local.model.Pokemon
 import com.example.pokedex.databinding.FragmentListAllBinding
@@ -29,14 +30,13 @@ class PokedexFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        binding = FragmentListAllBinding.inflate(inflater)
+        binding = FragmentListAllBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (savedInstanceState == null)
-            replaceFragment(LottieFragment.newInstance())
+        replaceFragment(LottieFragment.newInstance())
         setupAdapter()
     }
 
@@ -69,14 +69,24 @@ class PokedexFragment : Fragment() {
         val adapter = PokemonAdapter(listener)
         binding.rvPokemonList.adapter = adapter
         lifecycleScope.launch {
-            viewModel.pokemonListAllPaging.collect {
-                binding.cpProgress.isVisible = false
+            viewModel.pokemonListAll.collect {
                 adapter.submitData(it)
+            }
+        }
+
+        lifecycleScope.launch {
+            adapter.loadStateFlow.collect { loadState ->
+                binding.cpProgress.isVisible = loadState.refresh is LoadState.Loading
             }
         }
     }
 
     private fun replaceFragment(fragment: Fragment, add: Boolean = false) {
+        if (fragment is LottieFragment
+            && childFragmentManager.fragments.filterIsInstance<LottieFragment>().isNotEmpty()
+        )
+            return
+
         childFragmentManager
             .beginTransaction()
             .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)

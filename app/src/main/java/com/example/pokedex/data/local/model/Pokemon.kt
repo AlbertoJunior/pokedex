@@ -2,7 +2,6 @@ package com.example.pokedex.data.local.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.pokedex.core.capitalize
 import com.example.pokedex.data.remote.model.NameUrlObject
 
 @Entity
@@ -24,8 +23,6 @@ data class Pokemon(
     val pokemonSpecie: PokemonSpecie? = null,
     val pokemonArea: List<PokemonArea> = emptyList()
 ) {
-
-    fun getNameShow() = name.capitalize()
 
     fun getFavoriteText() = if (favorite) "Release!" else "Catch!"
 

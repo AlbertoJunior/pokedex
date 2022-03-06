@@ -3,7 +3,9 @@
     <string name="title_grass">Grass</string>
     <string name="title_my_pokedex">My Pokemons</string>
     <string name="title_pokemon_details">Pokemon Details</string>
+    <string name="title_pokemon_search">Search Pokemon</string>
     <string name="enter_in_grass">Enter in grass</string>
+    <string name="title_pokemon_flavor_text">Pokemon information text</string>
 
     <string name="name_format">Name: %1$s</string>
     <string name="baby_format">Baby: %1$s</string>
@@ -13,7 +15,7 @@
     <string name="moves">Moves:</string>
     <string name="stats">Stats:</string>
     <string name="abilities">Abilities:</string>
-    <string name="stat_format">%1$s: %2$s</string>
+    <string name="stat_format">%1$s: %2$d</string>
     <string name="type">Type:</string>
     <string name="catch_">Catch!</string>
     <string name="run_">Run!</string>
@@ -28,8 +30,15 @@
     <string name="mythical">Mythical</string>
     <string name="legendary">Legendary</string>
     <string name="natural_habitat">Natural Habitat:</string>
+    <string name="id_format">ID: %1$d</string>
+    <string name="id_name_format">ID: %1$d - %2$s</string>
     <string name="natural_habitat_format">Natural Habitat: %1$s</string>
     <string name="shape_format">Shape: %1$s</string>
     <string name="my_pokemons">My Pokemons!</string>
     <string name="double_tap_message">Double tap on image to catch or release this Pokemon</string>
+    <string name="search_pokemon_by_name_or_id">Search Pokemon by Name or ID</string>
+    <string name="search_pokemon_not_found">Not found Pokemon. Try another Name or ID</string>
+    <string name="search_pokemon">Search Pokemon</string>
+    <string name="hunting_pokemons_in_the_high_grass">Hunting Pokemons in the High Grass</string>
+    <string name="tab_page_format">%1$d / %2$d</string>
 </resources>

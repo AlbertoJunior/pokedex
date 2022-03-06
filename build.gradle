@@ -1,7 +1,10 @@
 buildscript {
+    def hilt = "2.41"
+    def nav_safe_args = "2.4.1"
+
     dependencies {
-        classpath "com.google.dagger:hilt-android-gradle-plugin:2.38.1"
-        classpath "androidx.navigation:navigation-safe-args-gradle-plugin:2.4.1"
+        classpath "com.google.dagger:hilt-android-gradle-plugin:$hilt"
+        classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$nav_safe_args"
     }
 }
 

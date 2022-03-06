@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <solid android:color="?colorBackgroundFloating" />
+    <solid android:color="@color/black_a10" />
 
     <stroke
         android:width="2dp"
-        android:color="@color/black_a30" />
+        android:color="@color/black_a20" />
 
     <corners android:radius="16dp" />
 

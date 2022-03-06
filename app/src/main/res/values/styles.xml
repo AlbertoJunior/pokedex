@@ -26,8 +26,10 @@
         <item name="android:fontFamily">sans-serif-smallcaps</item>
         <item name="android:textSize">20sp</item>
         <item name="android:textStyle">bold</item>
-        <item name="marginHorizontal">4dp</item>
-        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:layout_marginStart">8dp</item>
+        <item name="android:layout_marginEnd">8dp</item>
+        <item name="android:layout_marginTop">16dp</item>
+        <item name="android:layout_marginBottom">16dp</item>
         <item name="android:textColor">?colorPrimaryDark</item>
     </style>
 </resources>
