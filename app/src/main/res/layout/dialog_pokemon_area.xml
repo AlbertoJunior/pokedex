@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".view.dialog.PokemonFlavorTextDialog">
+
+    <data>
+
+        <variable
+            name="area"
+            type="com.example.pokedex.data.local.model.PokemonArea" />
+
+        <variable
+            name="color"
+            type="String" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_title"
+            style="@style/PokedexTextTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:text="@{area.name}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:textColorByText="@{color}"
+            tools:text="Area Route 11" />
+
+        <com.google.android.material.divider.MaterialDivider
+            android:id="@+id/divider_1"
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:layout_marginVertical="8dp"
+            app:dividerInsetEnd="24dp"
+            app:dividerInsetStart="24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_title" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="8dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider_1">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tv_chance"
+                style="@style/PokedexTextDetail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="4dp"
+                android:maxLines="1"
+                android:text="@{@string/chance_format(area.chance)}"
+                app:textColorByText="@{color}"
+                tools:text="Chance: " />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tv_min_level"
+                style="@style/PokedexTextDetail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="4dp"
+                android:text="@{@string/min_level_format(area.minLevel)}"
+                app:textColorByText="@{color}"
+                tools:text="Min. Level: 5" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tv_max_level"
+                style="@style/PokedexTextDetail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="4dp"
+                android:text="@{@string/max_level_format(area.maxLevel)}"
+                app:textColorByText="@{color}"
+                tools:text="Min. Level: 5" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
+

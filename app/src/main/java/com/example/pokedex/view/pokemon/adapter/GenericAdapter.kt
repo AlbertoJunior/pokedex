@@ -33,7 +33,7 @@ class GenericAdapter(
     }
 
     override fun onBindViewHolder(holder: GenericViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(getItem(position), position)
     }
 
     class GenericViewHolder(
@@ -42,14 +42,13 @@ class GenericAdapter(
         private val onClickListener: GenericAdapterClickListener?
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: String) {
+        fun bind(item: String, position: Int) {
             binding.tvText.text = item
             binding.root.colorByText(color)
 
-            onClickListener?.let {
-                binding.root.isClickable = true
+            onClickListener?.let { listener ->
                 binding.root.setOnClickListener {
-                    onClickListener.onItemClick(item)
+                    listener.onItemClick(position)
                 }
             }
         }

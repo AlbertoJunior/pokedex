@@ -17,6 +17,7 @@ import com.example.pokedex.core.EventSource
 import com.example.pokedex.core.Utils
 import com.example.pokedex.data.local.model.Stat
 import com.example.pokedex.databinding.FragmentPokemonDetailsBinding
+import com.example.pokedex.view.dialog.PokemonAreaDialog
 import com.example.pokedex.view.dialog.PokemonFlavorTextDialog
 import com.example.pokedex.view.dialog.listeners.GenericAdapterClickListener
 import com.example.pokedex.view.pokedex.viewmodel.PokemonViewModel
@@ -179,11 +180,11 @@ class PokemonDetailFragment : Fragment() {
     }
 
     private fun loadPokemon() {
-        binding.progress.isVisible = true
-        binding.progressImage.isVisible = true
-
         Transformations.switchMap(viewModel.pokemonId) {
-            viewModelDetails.fetchPokemonDetail(it ?: args.pokemonId)
+            val id = it ?: args.pokemonId
+            binding.progress.isVisible = id != 0L
+            binding.progressImage.isVisible = id != 0L
+            viewModelDetails.fetchPokemonDetail(id)
         }.observe(viewLifecycleOwner) {
             setupListeners(it.id)
             binding.pokemonDetail = it
@@ -205,7 +206,13 @@ class PokemonDetailFragment : Fragment() {
             mountGridGroup(
                 pokemonColor,
                 it.pokemonArea.map { area -> area.name },
-                binding.rvEncounterGroup
+                binding.rvEncounterGroup,
+                object : GenericAdapterClickListener {
+                    override fun onItemClick(itemPosition: Int) {
+                        PokemonAreaDialog.newInstance(it.id, itemPosition)
+                            .show(childFragmentManager, "show_pokemon_area")
+                    }
+                }
             )
             mountGridGroup(pokemonColor, it.types, binding.rvTypes)
             mountGridGroup(pokemonColor, it.abilities, binding.rvAbilities)
@@ -228,12 +235,10 @@ class PokemonDetailFragment : Fragment() {
 
     private fun mountStats(color: String?, stats: List<Stat>?) {
         binding.rvStats.isVisible = stats?.isNotEmpty() == true
-
-        val map = stats?.map { stat ->
-            getString(R.string.stat_format, stat.name, stat.base)
-        }
         binding.rvStats.adapter = GenericTextAdapter(color).apply {
-            submitList(map)
+            submitList(stats?.map { stat ->
+                getString(R.string.stat_format, stat.name, stat.base)
+            })
         }
     }
 

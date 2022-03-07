@@ -19,6 +19,9 @@ class PokemonViewModel @Inject constructor(
     private val _bottomNavigationStatus = MutableLiveData(true)
     val bottomNavigationStatus: LiveData<Boolean> = _bottomNavigationStatus
 
+    var showingLottie = false
+        private set
+
     val pokemonListAll = repository.pokemonListAllPaging.cachedIn(viewModelScope)
 
     fun fetchFavoritePokemonList(): LiveData<EventSource<List<Pokemon>>> {
@@ -42,6 +45,10 @@ class PokemonViewModel @Inject constructor(
 
     fun hideBottomNav() {
         _bottomNavigationStatus.value = false
+    }
+
+    fun setLottieVisibility(showing: Boolean) {
+        showingLottie = showing
     }
 
 }

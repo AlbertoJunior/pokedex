@@ -6,6 +6,7 @@
     <string name="title_pokemon_search">Search Pokemon</string>
     <string name="enter_in_grass">Enter in grass</string>
     <string name="title_pokemon_flavor_text">Pokemon information text</string>
+    <string name="title_pokemon_area">Pokemon area information</string>
 
     <string name="name_format">Name: %1$s</string>
     <string name="baby_format">Baby: %1$s</string>
@@ -37,8 +38,11 @@
     <string name="my_pokemons">My Pokemons!</string>
     <string name="double_tap_message">Double tap on image to catch or release this Pokemon</string>
     <string name="search_pokemon_by_name_or_id">Search Pokemon by Name or ID</string>
-    <string name="search_pokemon_not_found">Not found Pokemon. Try another Name or ID</string>
+    <string name="search_pokemon_not_found">Not found Pokemon.\nTry another Name or ID</string>
     <string name="search_pokemon">Search Pokemon</string>
     <string name="hunting_pokemons_in_the_high_grass">Hunting Pokemons in the High Grass</string>
     <string name="tab_page_format">%1$d / %2$d</string>
+    <string name="chance_format">Chance: %1$d</string>
+    <string name="min_level_format">Min. Level: %1$d</string>
+    <string name="max_level_format">Max. Level: %1$d</string>
 </resources>

@@ -17,7 +17,7 @@ object DataBaseProvider {
     @Singleton
     fun provideDatabase(@ApplicationContext context: Context): PokemonDatabase {
         return Room.databaseBuilder(
-            context.applicationContext,
+            context,
             PokemonDatabase::class.java,
             "pokemon.db"
         )
