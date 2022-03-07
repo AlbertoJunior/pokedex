@@ -67,6 +67,9 @@
             app:exitAnim="@anim/fade_out"
             app:popEnterAnim="@anim/fade_in"
             app:popExitAnim="@anim/fade_out" />
+        <action
+            android:id="@+id/action_navigation_pokemon_details_to_show_pokemon_area"
+            app:destination="@id/show_pokemon_area" />
     </fragment>
 
     <fragment
@@ -94,5 +97,23 @@
             android:name="pokemon_id"
             android:defaultValue="0L"
             app:argType="long" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/show_pokemon_area"
+        android:name="com.example.pokedex.view.dialog.PokemonAreaDialog"
+        android:label="@string/title_pokemon_flavor_text"
+        tools:layout="@layout/dialog_pokemon_area">
+
+        <argument
+            android:name="pokemon_id"
+            android:defaultValue="0L"
+            app:argType="long" />
+
+
+        <argument
+            android:name="item_position"
+            android:defaultValue="0"
+            app:argType="integer" />
     </fragment>
 </navigation>

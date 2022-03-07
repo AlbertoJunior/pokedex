@@ -14,6 +14,8 @@ import com.google.android.material.divider.MaterialDivider
 import com.google.android.material.progressindicator.CircularProgressIndicator
 
 fun String.capitalize(): String {
+    if (this.isBlank() || this.isEmpty())
+        return ""
     return this.split(" ")
         .joinToString(" ") { it.replaceFirst("[a-z]".toRegex(), it.first().uppercase()) }
 }

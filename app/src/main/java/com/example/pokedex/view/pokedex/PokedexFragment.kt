@@ -8,6 +8,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import com.example.pokedex.R
 import com.example.pokedex.data.local.model.Pokemon
@@ -27,6 +28,8 @@ class PokedexFragment : Fragment() {
 
     private lateinit var binding: FragmentListAllBinding
 
+    private val navController by lazy { findNavController() }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -38,14 +41,16 @@ class PokedexFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         replaceFragment(LottieFragment.newInstance())
         setupAdapter()
+        navController.addOnDestinationChangedListener { _, _, _ ->
+            viewModel.setLottieVisibility(true)
+        }
     }
 
     private fun setupAdapter() {
         val listener = object : PokemonAdapterListener {
             var lastPokemonId = 0L
             override fun onPokemonClicked(pokemon: Pokemon) {
-                val showingLottie =
-                    childFragmentManager.fragments.find { it is LottieFragment } != null
+                val showingLottie = viewModel.showingLottie
 
                 when {
                     showingLottie -> {
@@ -82,10 +87,10 @@ class PokedexFragment : Fragment() {
     }
 
     private fun replaceFragment(fragment: Fragment, add: Boolean = false) {
-        if (fragment is LottieFragment
-            && childFragmentManager.fragments.filterIsInstance<LottieFragment>().isNotEmpty()
-        )
+        if (viewModel.showingLottie && fragment is LottieFragment)
             return
+
+        viewModel.setLottieVisibility(fragment is LottieFragment)
 
         childFragmentManager
             .beginTransaction()
