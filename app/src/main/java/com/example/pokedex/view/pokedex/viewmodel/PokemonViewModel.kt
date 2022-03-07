@@ -19,7 +19,13 @@ class PokemonViewModel @Inject constructor(
     private val _bottomNavigationStatus = MutableLiveData(true)
     val bottomNavigationStatus: LiveData<Boolean> = _bottomNavigationStatus
 
-    var showingLottie = false
+    private val _popBackStack = MutableLiveData<Boolean?>(null)
+    val popBackStackEvent: LiveData<Boolean?> = _popBackStack
+
+    var showingLottie = true
+        private set
+
+    var lastPokemonId: Long? = null
         private set
 
     val pokemonListAll = repository.pokemonListAllPaging.cachedIn(viewModelScope)
@@ -37,6 +43,7 @@ class PokemonViewModel @Inject constructor(
 
     fun setPokemonId(pokemonId: Long?) {
         _pokemonId.value = pokemonId
+        lastPokemonId = pokemonId
     }
 
     fun showBottomNav() {
@@ -49,6 +56,10 @@ class PokemonViewModel @Inject constructor(
 
     fun setLottieVisibility(showing: Boolean) {
         showingLottie = showing
+    }
+
+    fun popBackStackEvent(pop: Boolean?) {
+        _popBackStack.value = pop
     }
 
 }

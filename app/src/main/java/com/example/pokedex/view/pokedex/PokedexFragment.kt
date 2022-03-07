@@ -8,7 +8,6 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import com.example.pokedex.R
 import com.example.pokedex.data.local.model.Pokemon
@@ -28,8 +27,6 @@ class PokedexFragment : Fragment() {
 
     private lateinit var binding: FragmentListAllBinding
 
-    private val navController by lazy { findNavController() }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -39,32 +36,41 @@ class PokedexFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        replaceFragment(LottieFragment.newInstance())
+        if (viewModel.showingLottie)
+            showLottie()
+        callObservers()
         setupAdapter()
-        navController.addOnDestinationChangedListener { _, _, _ ->
-            viewModel.setLottieVisibility(true)
+    }
+
+    private fun callObservers() {
+        viewModel.popBackStackEvent.observe(viewLifecycleOwner) {
+            it?.let {
+                val notEmpty = childFragmentManager.fragments
+                    .filterIsInstance(PokemonDetailFragment::class.java)
+                    .isNotEmpty()
+
+                if (it && notEmpty) {
+                    childFragmentManager.popBackStack()
+                }
+                viewModel.popBackStackEvent(null)
+                viewModel.setPokemonId(null)
+                showLottie()
+            }
         }
     }
 
     private fun setupAdapter() {
         val listener = object : PokemonAdapterListener {
-            var lastPokemonId = 0L
             override fun onPokemonClicked(pokemon: Pokemon) {
-                val showingLottie = viewModel.showingLottie
-
                 when {
-                    showingLottie -> {
-                        lastPokemonId = pokemon.id
+                    viewModel.showingLottie -> {
                         viewModel.setPokemonId(pokemon.id)
                         replaceFragment(PokemonDetailFragment.newInstance(pokemon.id), true)
                     }
-                    lastPokemonId == pokemon.id -> {
-                        lastPokemonId = 0L
-                        viewModel.setPokemonId(null)
-                        replaceFragment(LottieFragment.newInstance())
+                    viewModel.lastPokemonId == pokemon.id -> {
+                        viewModel.popBackStackEvent(true)
                     }
                     else -> {
-                        lastPokemonId = pokemon.id
                         viewModel.setPokemonId(pokemon.id)
                     }
                 }
@@ -86,10 +92,11 @@ class PokedexFragment : Fragment() {
         }
     }
 
-    private fun replaceFragment(fragment: Fragment, add: Boolean = false) {
-        if (viewModel.showingLottie && fragment is LottieFragment)
-            return
+    private fun showLottie() {
+        replaceFragment(LottieFragment.newInstance())
+    }
 
+    private fun replaceFragment(fragment: Fragment, add: Boolean = false) {
         viewModel.setLottieVisibility(fragment is LottieFragment)
 
         childFragmentManager

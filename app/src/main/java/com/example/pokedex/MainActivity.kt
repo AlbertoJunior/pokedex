@@ -33,4 +33,10 @@ class MainActivity : AppCompatActivity() {
             binding.navView.isVisible = it
         }
     }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        viewModel.popBackStackEvent(true)
+    }
+
 }
