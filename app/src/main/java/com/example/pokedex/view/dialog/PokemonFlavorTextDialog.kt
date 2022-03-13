@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.navArgs
@@ -21,12 +20,6 @@ class PokemonFlavorTextDialog : DialogFragment() {
     private lateinit var binding: DialogPokemonFlavorTextBinding
     private val viewModel by activityViewModels<PokemonDetailViewModel>()
     private val args by navArgs<PokemonFlavorTextDialogArgs>()
-
-    companion object {
-        fun newInstance(pokemonId: Long) = PokemonFlavorTextDialog().apply {
-            arguments = bundleOf("pokemon_id" to pokemonId)
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

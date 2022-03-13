@@ -5,7 +5,6 @@ import android.os.Build
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.databinding.BindingAdapter
@@ -27,39 +26,42 @@ fun View.visibilityByBoolean(value: Boolean?) {
 
 @BindingAdapter("colorByText")
 fun View.colorByText(value: String?) {
-    val color = ContextCompat.getColor(context, getColor(value))
-    when (this) {
-        is ImageView -> imageTintList = ColorStateList.valueOf(color)
-        is CircularProgressIndicator -> setIndicatorColor(color)
-        is MaterialDivider -> dividerColor = color
-        is TextView -> setTextColor(ColorStateList.valueOf(color))
-        else -> background.setTint(color)
-    }
-}
-
-@RequiresApi(Build.VERSION_CODES.R)
-@BindingAdapter("colorByTextContrast")
-fun View.colorByTextContrast(value: String?) {
-    when (value) {
-        "black", "white" -> R.color.gray_700
-        else -> {
-            if (resources.configuration.isNightModeActive)
-                androidx.appcompat.R.color.background_floating_material_dark
-            else
-                androidx.appcompat.R.color.background_floating_material_light
-        }
-    }.let {
+    getColor(value)?.let {
         val color = ContextCompat.getColor(context, it)
-
         when (this) {
             is ImageView -> imageTintList = ColorStateList.valueOf(color)
             is CircularProgressIndicator -> setIndicatorColor(color)
-            else -> setBackgroundColor(color)
+            is MaterialDivider -> dividerColor = color
+            is TextView -> setTextColor(ColorStateList.valueOf(color))
+            else -> background.setTint(color)
         }
     }
 }
 
-fun getColor(value: String?): Int {
+@BindingAdapter("colorByTextContrast")
+fun View.colorByTextContrast(value: String?) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        when (value) {
+            "black", "white" -> R.color.gray_700
+            else -> {
+                if (resources.configuration.isNightModeActive)
+                    androidx.appcompat.R.color.background_floating_material_dark
+                else
+                    androidx.appcompat.R.color.background_floating_material_light
+            }
+        }.let {
+            val color = ContextCompat.getColor(context, it)
+
+            when (this) {
+                is ImageView -> imageTintList = ColorStateList.valueOf(color)
+                is CircularProgressIndicator -> setIndicatorColor(color)
+                else -> setBackgroundColor(color)
+            }
+        }
+    }
+}
+
+fun getColor(value: String?): Int? {
     val color = when (value) {
         "yellow" -> R.color.yellow_200
         "red" -> R.color.red_700
@@ -71,13 +73,15 @@ fun getColor(value: String?): Int {
         "gray" -> R.color.gray_500
         "pink" -> R.color.pink_500
         "purple" -> R.color.purple_500
-        else -> R.color.blue_700
+        else -> null
     }
     return color
 }
 
 @BindingAdapter("textColorByText")
 fun TextView.textColorByText(value: String?) {
-    setTextColor(ColorStateList.valueOf(ContextCompat.getColor(context, getColor(value))))
+    getColor(value)?.let { color ->
+        setTextColor(ColorStateList.valueOf(ContextCompat.getColor(context, color)))
+    }
 }
 

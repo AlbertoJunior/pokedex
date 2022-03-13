@@ -60,16 +60,6 @@
             android:defaultValue="false"
             app:argType="boolean" />
 
-        <action
-            android:id="@+id/action_navigation_pokemon_details_to_show_pokemon_flavor_text"
-            app:destination="@id/show_pokemon_flavor_text"
-            app:enterAnim="@anim/fade_in"
-            app:exitAnim="@anim/fade_out"
-            app:popEnterAnim="@anim/fade_in"
-            app:popExitAnim="@anim/fade_out" />
-        <action
-            android:id="@+id/action_navigation_pokemon_details_to_show_pokemon_area"
-            app:destination="@id/show_pokemon_area" />
     </fragment>
 
     <fragment
@@ -87,8 +77,8 @@
             app:popExitAnim="@anim/fade_out" />
     </fragment>
 
-    <fragment
-        android:id="@+id/show_pokemon_flavor_text"
+    <dialog
+        android:id="@+id/show_dialog_pokemon_flavor_text"
         android:name="com.example.pokedex.view.dialog.PokemonFlavorTextDialog"
         android:label="@string/title_pokemon_flavor_text"
         tools:layout="@layout/dialog_pokemon_flavor_text">
@@ -97,10 +87,10 @@
             android:name="pokemon_id"
             android:defaultValue="0L"
             app:argType="long" />
-    </fragment>
+    </dialog>
 
-    <fragment
-        android:id="@+id/show_pokemon_area"
+    <dialog
+        android:id="@+id/show_dialog_pokemon_area"
         android:name="com.example.pokedex.view.dialog.PokemonAreaDialog"
         android:label="@string/title_pokemon_flavor_text"
         tools:layout="@layout/dialog_pokemon_area">
@@ -110,10 +100,25 @@
             android:defaultValue="0L"
             app:argType="long" />
 
-
         <argument
             android:name="item_position"
             android:defaultValue="0"
             app:argType="integer" />
-    </fragment>
+    </dialog>
+
+    <action
+        android:id="@+id/action_navigation_pokemon_details_to_show_pokemon_flavor_text"
+        app:destination="@id/show_dialog_pokemon_flavor_text"
+        app:enterAnim="@anim/fade_in"
+        app:exitAnim="@anim/fade_out"
+        app:popEnterAnim="@anim/fade_in"
+        app:popExitAnim="@anim/fade_out" />
+
+    <action
+        android:id="@+id/action_navigation_pokemon_details_to_show_pokemon_area"
+        app:destination="@id/show_dialog_pokemon_area"
+        app:enterAnim="@anim/fade_in"
+        app:exitAnim="@anim/fade_out"
+        app:popEnterAnim="@anim/fade_in"
+        app:popExitAnim="@anim/fade_out"/>
 </navigation>

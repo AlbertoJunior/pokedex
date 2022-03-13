@@ -12,13 +12,12 @@ import androidx.lifecycle.Transformations
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
+import com.example.pokedex.NavigationDirections
 import com.example.pokedex.R
 import com.example.pokedex.core.EventSource
 import com.example.pokedex.core.Utils
 import com.example.pokedex.data.local.model.Stat
 import com.example.pokedex.databinding.FragmentPokemonDetailsBinding
-import com.example.pokedex.view.dialog.PokemonAreaDialog
-import com.example.pokedex.view.dialog.PokemonFlavorTextDialog
 import com.example.pokedex.view.dialog.listeners.GenericAdapterClickListener
 import com.example.pokedex.view.pokedex.viewmodel.PokemonViewModel
 import com.example.pokedex.view.pokemon.adapter.GenericAdapter
@@ -135,8 +134,7 @@ class PokemonDetailFragment : Fragment() {
         }
 
         binding.btFlavor.setOnClickListener {
-            PokemonFlavorTextDialog.newInstance(pokemonId)
-                .show(childFragmentManager, "show_pokemon_flavor_text")
+           navController.navigate(NavigationDirections.actionNavigationPokemonDetailsToShowPokemonFlavorText(pokemonId))
         }
 
         binding.btHelp.setOnClickListener {
@@ -209,8 +207,12 @@ class PokemonDetailFragment : Fragment() {
                 binding.rvEncounterGroup,
                 object : GenericAdapterClickListener {
                     override fun onItemClick(itemPosition: Int) {
-                        PokemonAreaDialog.newInstance(it.id, itemPosition)
-                            .show(childFragmentManager, "show_pokemon_area")
+                        navController.navigate(
+                            NavigationDirections.actionNavigationPokemonDetailsToShowPokemonArea(
+                                it.id,
+                                itemPosition
+                            )
+                        )
                     }
                 }
             )

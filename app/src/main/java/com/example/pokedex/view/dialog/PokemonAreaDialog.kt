@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.navArgs
@@ -19,15 +18,6 @@ class PokemonAreaDialog : DialogFragment() {
     private lateinit var binding: DialogPokemonAreaBinding
     private val viewModel by activityViewModels<PokemonDetailViewModel>()
     private val args by navArgs<PokemonAreaDialogArgs>()
-
-    companion object {
-        fun newInstance(pokemonId: Long, itemPosition: Int) = PokemonAreaDialog().apply {
-            arguments = bundleOf(
-                "pokemon_id" to pokemonId,
-                "item_position" to itemPosition
-            )
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

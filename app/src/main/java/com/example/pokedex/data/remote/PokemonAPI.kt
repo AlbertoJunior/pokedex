@@ -1,10 +1,7 @@
 package com.example.pokedex.data.remote
 
 import com.example.pokedex.data.local.model.Pokemon
-import com.example.pokedex.data.remote.model.LocationAreaEncounterElement
-import com.example.pokedex.data.remote.model.PokemonDetailedResponse
-import com.example.pokedex.data.remote.model.PokemonListResponse
-import com.example.pokedex.data.remote.model.PokemonSpecieResponse
+import com.example.pokedex.data.remote.model.*
 import retrofit2.http.*
 
 interface PokemonAPI {
@@ -32,6 +29,9 @@ interface PokemonAPI {
 
     @GET("pokemon/{id}/encounters")
     suspend fun fetchEncounterAreaPokemonById(@Path("id") id: Long): Array<LocationAreaEncounterElement>
+
+    @GET("generation/{generation}/")
+    suspend fun fetchPokemonByGeneration(@Path("generation") generation: Int): PokemonGenerationResponse
 
     @POST(WEBHOOK)
     suspend fun sendPokemonInfo(@Body directPokemon: Pokemon)
