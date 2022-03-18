@@ -25,33 +25,36 @@ Creating a Pokedex App to study.
 
 * Paginação de dados (tela inicial) feito com `Paging3`
 
+# Features:
+
+* Listagem de Pokemons (aproximadamente 900 pokemons fornecidos pela API)
+* Detalhes dos Pokemons (nome, atributos, tipos, habilidades, locais onde é encontrado, cor, textos descritivos)
+* Pokemons Favoritos
+* Enviar informações de Pokemons favoritos
+* Buscar Pokemons por nome ou ID.
+
 # Images:
+**Feature: Listagem e Detalhes**
 
-![Screen: List all](imgs/list_all.png)
+<img src="imgs/list_all_view.png" width="265" height="590"> <img src="imgs/list_all_favorite.png" width="265" height="590">
 
-![Screen: List all view pokemon](imgs/list_all_view.png)
+**Feature: Pokedex (Favoritos)**
 
-![Screen: List all favorite Pokemon](imgs/list_all_favorite.png)
+<img src="imgs/my_pokedex.png" width="265" height="590"> <img src="imgs/details.png" width="265" height="590">
 
-![Screen: Details](imgs/details.png)
+**- Feature: Enviando informações**
 
-![Screen: My Pokedex](imgs/my_pokedex.png)
+<img src="imgs/send_loading.png" width="265" height="590"> <img src="imgs/send_finish.png" width="265" height="590">
 
-![Screen: Send loading](imgs/send_loading.png)
+**Feature: Procurar Pokemon**
 
-![Screen: Send finish](imgs/send_finish.png)
-
-![Screen: Search Pikachu.png](imgs/search_pikachu.png)
-
-![Screen: Search Nidoran F](imgs/search_nidoran_f.png)
-
-![Screen: Search by ID](imgs/search_id.png)
+<img src="imgs/search_pikachu.png" width="265" height="590"> <img src="imgs/search_nidoran_f.png" width="265" height="590"> <img src="imgs/search_id.png" width="265" height="590">
 
 # API Rest:
 
 * [PokeApi](https://pokeapi.co/docs/v2#pokemon)
 
-![API](imgs/poke_api.png)
+<img src="imgs/poke_api.png" width="800" height="342">
 
 # Used libraries:
 
