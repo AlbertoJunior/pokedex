@@ -18,7 +18,6 @@ import com.example.pokedex.view.pokedex.listeners.PokemonAdapterListener
 import com.example.pokedex.view.pokedex.viewmodel.PokemonViewModel
 import com.example.pokedex.view.pokemon.PokemonDetailFragment
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -28,10 +27,13 @@ class PokedexFragment : Fragment() {
     private lateinit var binding: FragmentListAllBinding
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
-        binding = FragmentListAllBinding.inflate(inflater, container, false)
-        return binding.root
+        return FragmentListAllBinding.inflate(inflater, container, false)
+            .also { binding = it }
+            .root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

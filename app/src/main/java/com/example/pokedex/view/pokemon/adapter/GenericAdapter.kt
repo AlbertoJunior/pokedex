@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pokedex.core.colorByText
+import com.example.pokedex.core.textColorByText
 import com.example.pokedex.databinding.ItemGenericAdapterBinding
 import com.example.pokedex.view.dialog.listeners.GenericAdapterClickListener
 
@@ -44,6 +45,7 @@ class GenericAdapter(
 
         fun bind(item: String, position: Int) {
             binding.tvText.text = item
+            binding.tvText.textColorByText(color)
             binding.root.colorByText(color)
 
             onClickListener?.let { listener ->

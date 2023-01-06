@@ -1,5 +1,6 @@
 package com.example.pokedex.view.search
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.LayoutInflater
@@ -25,7 +26,19 @@ class SearchPokemonFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         binding = FragmentSearchPokemonBinding.inflate(layoutInflater)
+        verifyHasDeeplink()
         return binding.root
+    }
+
+    private fun verifyHasDeeplink() {
+        if (requireActivity().intent.action == Intent.ACTION_VIEW) {
+            val value = requireActivity().intent.data?.path?.substringAfterLast('/')
+            if (value != null) {
+                binding.etSearch.setText(value)
+                viewModel.setPokemonId(value)
+            }
+            requireActivity().intent.data = null
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

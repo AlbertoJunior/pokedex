@@ -28,11 +28,14 @@ fun View.visibilityByBoolean(value: Boolean?) {
 fun View.colorByText(value: String?) {
     getColor(value)?.let {
         val color = ContextCompat.getColor(context, it)
+
         when (this) {
             is ImageView -> imageTintList = ColorStateList.valueOf(color)
             is CircularProgressIndicator -> setIndicatorColor(color)
             is MaterialDivider -> dividerColor = color
-            is TextView -> setTextColor(ColorStateList.valueOf(color))
+            is TextView -> getColorText(value)?.let { colorText ->
+                setTextColor(ColorStateList.valueOf(ContextCompat.getColor(context, colorText)))
+            }
             else -> background.setTint(color)
         }
     }
@@ -78,10 +81,25 @@ fun getColor(value: String?): Int? {
     return color
 }
 
-@BindingAdapter("textColorByText")
-fun TextView.textColorByText(value: String?) {
-    getColor(value)?.let { color ->
-        setTextColor(ColorStateList.valueOf(ContextCompat.getColor(context, color)))
+fun getColorText(value: String?): Int? {
+    return when (value) {
+        "yellow" -> R.color.yellow_700
+        "red" -> R.color.red_700
+        "green" -> R.color.green_700
+        "blue" -> R.color.blue_550
+        "black" -> R.color.black_700
+        "white" -> R.color.white_700
+        "brown" -> R.color.brown_500
+        "gray" -> R.color.gray_500
+        "pink" -> R.color.pink_500
+        "purple" -> R.color.purple_500
+        else -> null
     }
 }
 
+@BindingAdapter("textColorByText")
+fun TextView.textColorByText(value: String?) {
+    getColorText(value)?.let { color ->
+        setTextColor(ColorStateList.valueOf(ContextCompat.getColor(context, color)))
+    }
+}

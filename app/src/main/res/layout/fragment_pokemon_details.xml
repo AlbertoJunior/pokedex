@@ -7,6 +7,10 @@
     <data>
 
         <variable
+            name="showProgress"
+            type="Boolean" />
+
+        <variable
             name="pokemonDetail"
             type="com.example.pokedex.data.local.model.Pokemon" />
     </data>
@@ -217,6 +221,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginVertical="4dp"
                             android:text="@{@string/id_format(pokemonDetail.id)}"
+                            app:textColorByText="@{pokemonDetail.pokemonSpecie.color}"
                             tools:text="ID: 756" />
 
                         <androidx.appcompat.widget.AppCompatTextView
@@ -226,6 +231,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginVertical="4dp"
                             android:text="@{@string/natural_habitat_format(pokemonDetail.pokemonSpecie.getHabitatShow())}"
+                            app:textColorByText="@{pokemonDetail.pokemonSpecie.color}"
                             tools:text="Natural Habitat:" />
 
                         <androidx.appcompat.widget.AppCompatTextView
@@ -235,6 +241,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginVertical="4dp"
                             android:text="@{@string/shape_format(pokemonDetail.pokemonSpecie.getShapeShow())}"
+                            app:textColorByText="@{pokemonDetail.pokemonSpecie.color}"
                             tools:text="Shape: Quadruped" />
 
                         <androidx.appcompat.widget.LinearLayoutCompat
@@ -272,7 +279,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginVertical="4dp"
-                            android:text="@string/abilities" />
+                            android:text="@string/abilities"
+                            app:textColorByText="@{pokemonDetail.pokemonSpecie.color}" />
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/rv_abilities"
@@ -290,7 +298,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginVertical="4dp"
-                            android:text="@string/stats" />
+                            android:text="@string/stats"
+                            app:textColorByText="@{pokemonDetail.pokemonSpecie.color}" />
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/rv_stats"
@@ -307,7 +316,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginVertical="4dp"
-                            android:text="@string/found_on" />
+                            android:text="@string/found_on"
+                            app:textColorByText="@{pokemonDetail.pokemonSpecie.color}" />
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/rv_encounter_group"
@@ -326,7 +336,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginVertical="4dp"
-                            android:text="@string/type" />
+                            android:text="@string/type"
+                            app:textColorByText="@{pokemonDetail.pokemonSpecie.color}" />
 
                         <androidx.appcompat.widget.LinearLayoutCompat
                             android:layout_width="match_parent"
@@ -384,7 +395,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginVertical="4dp"
-                            android:text="@string/moves" />
+                            android:text="@string/moves"
+                            app:textColorByText="@{pokemonDetail.pokemonSpecie.color}" />
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/rv_moves"
@@ -468,6 +480,15 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/cp_progress_general"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

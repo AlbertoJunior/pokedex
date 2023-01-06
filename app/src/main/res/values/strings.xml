@@ -45,4 +45,8 @@
     <string name="chance_format">Chance: %1$d</string>
     <string name="min_level_format">Min. Level: %1$d</string>
     <string name="max_level_format">Max. Level: %1$d</string>
+
+    <string name="not_found_information">Unknown</string>
+    <string name="not_found">Not found</string>
+    <string name="message_not_found_pokemon_area">This Pokédex didn\'t find any information about where this pokémon lives</string>
 </resources>
