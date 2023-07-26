@@ -31,13 +31,13 @@ class PokemonViewModel @Inject constructor(
     val pokemonListAll = repository.pokemonListAllPaging.cachedIn(viewModelScope)
 
     fun fetchFavoritePokemonList(): LiveData<EventSource<List<Pokemon>>> {
-        return Transformations.switchMap(repository.fetchFavoritePokemonLocal()) {
+        return repository.fetchFavoritePokemonLocal().switchMap {
             val value: EventSource<List<Pokemon>> = if (it.isNotEmpty()) {
                 EventSource.Ready(it)
             } else {
                 EventSource.Error("You don't have any favorite pokemon :(")
             }
-            return@switchMap MutableLiveData(value)
+            MutableLiveData(value)
         }
     }
 

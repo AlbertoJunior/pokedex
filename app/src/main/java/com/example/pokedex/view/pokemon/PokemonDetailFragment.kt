@@ -9,7 +9,7 @@ import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.switchMap
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
@@ -200,8 +200,8 @@ class PokemonDetailFragment : Fragment() {
     }
 
     private fun loadPokemon() {
-        Transformations.switchMap(viewModel.pokemonId) {
-            val id = it ?: args.pokemonId
+        viewModel.pokemonId.switchMap { pokemonId ->
+            val id = pokemonId ?: args.pokemonId
             binding.progress.isVisible = true
             binding.progressImage.isVisible = true
             binding.cpProgressGeneral.isVisible = true

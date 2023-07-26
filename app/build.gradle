@@ -29,12 +29,12 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '17'
         freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
     }
 
@@ -47,19 +47,19 @@ android {
 
 dependencies {
     def constraint_layout = "2.1.4"
-    def material = "1.7.0"
-    def appcompat = "1.5.1"
-    def core_kt = "1.9.0"
-    def ktx = "2.5.1"
-    def ktx_nav = "2.5.3"
-    def hilt = "2.41"
-    def room = "2.4.3"
+    def material = '1.9.0'
+    def appcompat = "1.6.1"
+    def core_kt = '1.10.1'
+    def ktx = '2.6.1'
+    def ktx_nav = '2.6.0'
+    def hilt = '2.46.1'
+    def room = '2.5.1'
     def paging = "3.1.1"
-    def lottie = "5.0.3"
-    def gson = "2.9.0"
+    def lottie = '6.0.1'
+    def gson = '2.10.1'
     def retrofit = "2.9.0"
     def okhttp = "5.0.0-alpha.5"
-    def glide = "4.13.1"
+    def glide = '4.15.1'
 
     implementation "androidx.core:core-ktx:$core_kt"
     implementation "androidx.appcompat:appcompat:$appcompat"

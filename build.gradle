@@ -1,6 +1,6 @@
 buildscript {
-    def hilt = "2.41"
-    def nav_safe_args = "2.5.1"
+    def hilt = "2.46.1"
+    def nav_safe_args = "2.6.0"
 
     dependencies {
         classpath "com.google.dagger:hilt-android-gradle-plugin:$hilt"
@@ -10,9 +10,9 @@ buildscript {
 
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
-    id 'com.android.application' version '7.3.1' apply false
-    id 'com.android.library' version '7.3.1' apply false
-    id 'org.jetbrains.kotlin.android' version '1.6.10' apply false
+    id 'com.android.application' version '8.0.2' apply false
+    id 'com.android.library' version '8.0.2' apply false
+    id 'org.jetbrains.kotlin.android' version '1.8.22' apply false
 }
 
 task clean(type: Delete) {

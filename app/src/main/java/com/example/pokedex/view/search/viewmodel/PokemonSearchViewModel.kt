@@ -15,7 +15,7 @@ class PokemonSearchViewModel @Inject constructor(
     private val _pokemonId = MutableLiveData<String?>(null)
     private val pokemonId: LiveData<String?> = _pokemonId
 
-    val pokemon: LiveData<EventSource<Pokemon?>> = Transformations.switchMap(pokemonId) { value ->
+    val pokemon: LiveData<EventSource<Pokemon?>> = pokemonId.switchMap { value ->
         if (value.isNullOrBlank())
             return@switchMap liveData { EventSource.Ready<Pokemon?>(null) }
 
