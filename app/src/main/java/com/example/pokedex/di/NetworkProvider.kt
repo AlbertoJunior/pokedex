@@ -14,6 +14,13 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkProvider {
+    @Provides
+    @Singleton
+    fun okHttpClientProvider() = OkHttpClient.Builder()
+        .connectTimeout(30, TimeUnit.SECONDS)
+        .callTimeout(30, TimeUnit.SECONDS)
+        .writeTimeout(30, TimeUnit.SECONDS)
+        .build()
 
     @Provides
     @Singleton
@@ -25,14 +32,7 @@ object NetworkProvider {
 
     @Provides
     @Singleton
-    fun retrofitPokemonApiProvider(client: Retrofit): PokemonAPI =
-        client.create(PokemonAPI::class.java)
-
-    @Provides
-    @Singleton
-    fun okHttpClientProvider() = OkHttpClient.Builder()
-        .connectTimeout(30, TimeUnit.SECONDS)
-        .callTimeout(30, TimeUnit.SECONDS)
-        .writeTimeout(30, TimeUnit.SECONDS)
-        .build()
+    fun retrofitPokemonApiProvider(
+        client: Retrofit
+    ): PokemonAPI = client.create(PokemonAPI::class.java)
 }

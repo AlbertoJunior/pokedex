@@ -13,8 +13,9 @@ import java.sql.SQLException
 import javax.inject.Inject
 
 @HiltViewModel
-class PokemonDetailViewModel @Inject constructor(private val repository: PokemonRepository) :
-    ViewModel() {
+class PokemonDetailViewModel @Inject constructor(
+    private val repository: PokemonRepository
+) : ViewModel() {
 
     private val _favoriteEvent = MutableLiveData<EventSource<Boolean>?>()
     val favoriteEvent: LiveData<EventSource<Boolean>?> = _favoriteEvent

@@ -32,12 +32,9 @@ class MainActivity : AppCompatActivity() {
         viewModel.bottomNavigationStatus.observe(this) {
             binding.navView.isVisible = it
         }
-    }
 
-    @Deprecated("Deprecated in Java")
-    override fun onBackPressed() {
-        super.getOnBackPressedDispatcher().onBackPressed()
-        viewModel.popBackStackEvent(true)
+        viewModel.popBackStackEvent.observe(this) {
+            onBackPressedDispatcher.onBackPressed()
+        }
     }
-
 }

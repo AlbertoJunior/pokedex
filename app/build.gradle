@@ -2,35 +2,40 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'androidx.navigation.safeargs.kotlin'
-    id 'kotlin-kapt'
+//    id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
+    id 'com.google.devtools.ksp'
 }
 
 android {
-    compileSdk 33
+    compileSdk = 34
+    namespace = 'com.example.pokedex'
 
     defaultConfig {
         def commitCount = Integer.parseInt('git rev-list --count HEAD'.execute([], project.rootDir).text.trim())
 
-        applicationId 'aj.dev.pokedex'
-        minSdk 23
-        targetSdk 33
-        versionCode commitCount
-        versionName "1.$commitCount"
+        applicationId = 'aj.dev.pokedex'
+        minSdk = 23
+        targetSdk = 34
+        versionCode = commitCount
+        versionName = "1.$commitCount"
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            minifyEnabled = false
+            proguardFiles(
+                    getDefaultProguardFile('proguard-android-optimize.txt'),
+                    'proguard-rules.pro'
+            )
         }
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     kotlinOptions {
@@ -39,24 +44,23 @@ android {
     }
 
     buildFeatures {
-        viewBinding true
-        dataBinding true
+        viewBinding = true
+        dataBinding = true
     }
-    namespace 'com.example.pokedex'
 }
 
 dependencies {
     def constraint_layout = "2.1.4"
-    def material = '1.9.0'
-    def appcompat = "1.6.1"
-    def core_kt = '1.10.1'
-    def ktx = '2.6.1'
-    def ktx_nav = '2.6.0'
-    def hilt = '2.46.1'
-    def room = '2.5.1'
-    def paging = "3.1.1"
+    def material = '1.12.0'
+    def appcompat = "1.7.0"
+    def core_kt = '1.13.1'
+    def ktx = '2.8.2'
+    def ktx_nav = '2.7.7'
+    def hilt = '2.51.1'
+    def room = '2.6.1'
+    def paging = "3.3.0"
     def lottie = '6.0.1'
-    def gson = '2.10.1'
+    def gson = '2.11.0'
     def retrofit = "2.9.0"
     def okhttp = "5.0.0-alpha.5"
     def glide = '4.15.1'
@@ -73,7 +77,7 @@ dependencies {
 
     // dependency injection
     implementation "com.google.dagger:hilt-android:$hilt"
-    kapt "com.google.dagger:hilt-android-compiler:$hilt"
+    ksp "com.google.dagger:hilt-android-compiler:$hilt"
 
     // parser json
     implementation "com.google.code.gson:gson:$gson"
@@ -88,14 +92,14 @@ dependencies {
     implementation "androidx.room:room-ktx:$room"
     implementation "androidx.room:room-paging:$room"
     annotationProcessor "androidx.room:room-compiler:$room"
-    kapt "androidx.room:room-compiler:$room"
+    ksp "androidx.room:room-compiler:$room"
 
     // image
     implementation "com.github.bumptech.glide:glide:$glide"
-    kapt "com.github.bumptech.glide:compiler:$glide"
+    ksp "com.github.bumptech.glide:compiler:$glide"
 
     // paging
-    implementation "androidx.paging:paging-runtime:$paging"
+    implementation "androidx.paging:paging-runtime-ktx:$paging"
     implementation "androidx.paging:paging-guava:$paging"
 
     //lottie

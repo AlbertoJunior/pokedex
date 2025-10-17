@@ -23,9 +23,10 @@ class PokemonPokedexAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val inflate =
-            ItemPokemonPokedexBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ViewHolder(inflate, listener)
+        return ViewHolder(
+            ItemPokemonPokedexBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+            listener
+        )
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {

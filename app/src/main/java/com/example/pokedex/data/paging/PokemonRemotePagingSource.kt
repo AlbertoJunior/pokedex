@@ -22,12 +22,16 @@ class PokemonRemotePagingSource(
                     state.closestItemToPosition(anchorPosition)?.offset
                 } ?: 0
             }
-            LoadType.PREPEND -> state.pages.firstOrNull { it.data.isNotEmpty() }?.data?.firstOrNull()?.offset?.minus(
-                10
-            ) ?: -1
-            LoadType.APPEND -> state.pages.lastOrNull { it.data.isNotEmpty() }?.data?.lastOrNull()?.offset?.plus(
-                10
-            ) ?: -1
+
+            LoadType.PREPEND ->
+                state.pages.firstOrNull { it.data.isNotEmpty() }
+                    ?.data?.firstOrNull()?.offset?.minus(10)
+                    ?: -1
+
+            LoadType.APPEND ->
+                state.pages.lastOrNull { it.data.isNotEmpty() }
+                    ?.data?.lastOrNull()?.offset?.plus(10)
+                    ?: -1
         }
 
         return try {
